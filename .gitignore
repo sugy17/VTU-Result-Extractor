@@ -2,7 +2,6 @@ old
 vtu_venv
  __pycache__/
  *.pyc
- **/__pycache__
-**/*.pyc
 .git
 .idea
+.gitignore

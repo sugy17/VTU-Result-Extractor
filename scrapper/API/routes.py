@@ -1,3 +1,4 @@
+import os
 from aiohttp import web
 from .. import req_buffer, request_que, current
 from ..diagnostics import restart_deamon
@@ -5,7 +6,7 @@ from ..diagnostics import restart_deamon
 
 async def send_stat(request):
     try:
-        print(request.rel_url)
+        # print(request.rel_url)
         # url = request.rel_url.query.get('url')
         # batch = request.rel_url.query.get('batch')
         # dept = request.rel_url.query.get('dept')
@@ -60,3 +61,8 @@ async def send_history(request):
         return web.json_response({"msg": "cleared_queue"})
     except Exception as e:
         return web.json_response({'msg': 'error' + str(e)})
+
+
+async def index(request):
+    print('scrapper.html')
+    return web.FileResponse(os.path.join(os.path.dirname(os.path.realpath(__file__)),'scrapper.html'))
