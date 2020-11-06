@@ -14,8 +14,3 @@ current = []
 my_loop = asyncio.get_event_loop()
 
 app = web.Application()
-# app.router.add_static('/static',
-#                           path='./DATA',
-#                           name='static')
-#app.add_routes([web.static('/DATA', './DATA')])
-entry_task = my_loop.create_task(asyncio.sleep(0.4))

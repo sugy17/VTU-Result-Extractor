@@ -1,12 +1,12 @@
 import asyncio
 
-from scrapper import my_loop, req_buffer, current, request_que
-from scrapper.Store.dataFiles import create_files
-from scrapper.Utils.USN import usn_generator
-from scrapper.Utils.exceptionHandler import handle_exception
-from scrapper.dbClient import send_files_to_db
-from scrapper.executer import async_executer
-from scrapper.requestChronology import get_exam_name
+from . import my_loop, req_buffer, current, request_que
+from .Store.dataFiles import create_files
+from .Utils.USN import usn_generator
+from .Utils.exceptionHandler import handle_exception
+from .dbClient import send_files_to_db
+from .executer import async_executer
+from .requestChronology import get_exam_name
 
 
 entry_task = ''

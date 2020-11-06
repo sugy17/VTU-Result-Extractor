@@ -11,7 +11,7 @@ from .deamon import entry
 app.add_routes([web.get('/start', get_req),
                 web.get('/status', send_stat),
                 web.get('/clear_queue', clear_queue),
-                web.static('/DATA', 'DATA', show_index=True)])
+                web.static('/DATA', './DATA', show_index=True)])
 
 # Configure default CORS settings.
 cors = aiohttp_cors.setup(app, defaults={

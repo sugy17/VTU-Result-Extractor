@@ -3,7 +3,6 @@ from .. import req_buffer, request_que, current
 from ..diagnostics import restart_deamon
 
 
-
 async def send_stat(request):
     try:
         print(request.rel_url)
@@ -48,7 +47,8 @@ async def clear_queue(request):
         restart_deamon()
         return web.json_response({"msg": "cleared_queue"})
     except Exception as e:
-        return web.json_response({'msg': 'error'+str(e)})
+        return web.json_response({'msg': 'error' + str(e)})
+
 
 async def send_history(request):
     try:
@@ -59,4 +59,4 @@ async def send_history(request):
         restart_deamon()
         return web.json_response({"msg": "cleared_queue"})
     except Exception as e:
-        return web.json_response({'msg': 'error'+str(e)})
+        return web.json_response({'msg': 'error' + str(e)})
