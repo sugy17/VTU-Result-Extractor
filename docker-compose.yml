@@ -1,6 +1,12 @@
-version: 3
+version: '3'
 services:
   scrapper:
+    image: scrapper:1.0
     build: .
     ports:
       - 8000:8000
+    volumes:
+      - csv-data:/DATA
+volumes:
+  csv-data:
+    name: scrapper_csv-data

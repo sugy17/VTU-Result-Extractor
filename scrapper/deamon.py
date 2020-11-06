@@ -32,21 +32,23 @@ async def entry():
         try:
             while (True):
                 await asyncio.sleep(3)
+                req_buffer[tuple(current)]['status'] = 'trying to connect to vtu site'
                 try:
                     exam_name = await my_loop.create_task(get_exam_name(indexpage_url))
                     exam_name = exam_name.replace('/', '_')
                     break
                 except Exception as e:
                     handle_exception(e)
+            # exam_name = "debug"
             if exam_name != 'err' or len(exam_name) < 35:
-                print('Sucess...Procceding')
+                print('Sucessefully fetched indexpage ... proceeding')
                 print(exam_name)
             else:
                 print('Err in fetching index page...aborting')
-                request_que[tuple(current)]['error'] = 'Err in fetching index page...aborting'
+                req_buffer[tuple(current)]['error'] = 'Err in fetching index page...aborting'
                 continue
             usn_gen = usn_generator(clg_code='1cr', batches=[batch],
-                                    depts=[dept], limit=2)
+                                    depts=[dept], limit=300)
             while True:
                 usns.clear()
                 try:
