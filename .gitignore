@@ -1,0 +1,6 @@
+old
+vtu_venv
+ __pycache__/
+ *.pyc
+.git
+.idea
