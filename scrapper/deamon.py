@@ -10,7 +10,7 @@ from scrapper.requestChronology import get_exam_name
 
 
 async def entry():
-   # global request_que, resultpage_url, indexpage_url, current, exam_name, resultpage_url
+    # global request_que, resultpage_url, indexpage_url, current, exam_name, resultpage_url
 
     invalid_count = 0
     # usn_gen = usn_generator(file_ = 'usns.txt')#clg_code='1cr', batches=['16'], depts=['ec'])
@@ -26,7 +26,7 @@ async def entry():
         req_buffer[tuple(current)]['status'] = 'processing'
         indexpage_url = "/".join(url.split('/')[-2:])
         resultpage_url = indexpage_url.replace('index.php', 'resultpage.php')
-        #print(indexpage_url,resultpage_url)
+        # print(indexpage_url,resultpage_url)
         try:
             while (True):
                 await asyncio.sleep(3)
@@ -56,12 +56,14 @@ async def entry():
                         usns.append(next(usn_gen))
                         group_count += 1
                 except Exception as e:
-                    await my_loop.create_task(async_executer(my_loop, invalid_count, usns, files_structure, indexpage_url, resultpage_url))
+                    await my_loop.create_task(
+                        async_executer(my_loop, invalid_count, usns, files_structure, indexpage_url, resultpage_url))
                     await create_files(files_structure, exam_name)
                     handle_exception(e, 'notify')
                     break
-                invalid_count = await my_loop.create_task(async_executer(my_loop, invalid_count, usns, files_structure, indexpage_url, resultpage_url))
-            send_files_to_db(exam_name)
+                invalid_count = await my_loop.create_task(
+                    async_executer(my_loop, invalid_count, usns, files_structure, indexpage_url, resultpage_url))
+            # send_files_to_db(exam_name)
             request_que.pop(0)
             req_buffer[tuple(current)]['status'] = 'complete'
         except Exception as e:

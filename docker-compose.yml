@@ -1,7 +1,6 @@
-version: '3'
+version: 3
 services:
-  example:
-    image: scrapper:1.0
+  scrapper:
+    build: .
     ports:
       - 8000:8000
-    build: .

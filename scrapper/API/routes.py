@@ -1,7 +1,6 @@
 from aiohttp import web
-from scrapper import my_loop, req_buffer, request_que, current
+from scrapper import req_buffer, request_que, current
 from scrapper.diagnostics import restart_deamon
-from scrapper.deamon import entry
 
 
 async def send_stat(request):
@@ -42,11 +41,21 @@ async def get_req(request):
 async def clear_queue(request):
     try:
         print(request.rel_url)
-
         for i in request_que:
             del (req_buffer[i])
         request_que.clear()
-        entry_task = my_loop.create_task(entry())
+        restart_deamon()
+        return web.json_response({"msg": "cleared_queue"})
+    except Exception as e:
+        return web.json_response({'msg': 'error'+str(e)})
+
+async def send_history(request):
+    try:
+        print(request.rel_url)
+        for i in request_que:
+            del (req_buffer[i])
+        request_que.clear()
+        restart_deamon()
         return web.json_response({"msg": "cleared_queue"})
     except Exception as e:
         return web.json_response({'msg': 'error'+str(e)})
