@@ -1,6 +1,6 @@
-FROM python:3.8-slim
+FROM python:3.8-alpine
 RUN mkdir -p /project
-RUN apt-get update && apt-get install -y tesseract-ocr && apt-get install -y imagemagick && apt-get clean
+RUN apk update && apk add tesseract-ocr && apk add imagemagick && apk cache clean
 COPY . /project
 RUN pip install -r /project/requirements.txt
-CMD ["python", "-m","/project/scrapper"]
+CMD ["python", "-m", "/project/scrapper"]

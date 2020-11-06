@@ -11,8 +11,9 @@ from scrapper.deamon import entry
 
 try:
     os.mkdir('DATA')
+    print('created DATA dir')
 except:
-    pass
+    print('created DATA dir already exists')
 
 # Add endpoints
 app.add_routes([web.get('/start', get_req),

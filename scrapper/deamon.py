@@ -46,7 +46,7 @@ async def entry():
                 request_que[tuple(current)]['error'] = 'Err in fetching index page...aborting'
                 continue
             usn_gen = usn_generator(clg_code='1cr', batches=[batch],
-                                    depts=[dept], limit=100)
+                                    depts=[dept], limit=2)
             while True:
                 usns.clear()
                 try:
