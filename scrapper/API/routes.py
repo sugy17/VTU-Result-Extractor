@@ -52,17 +52,13 @@ async def clear_queue(request):
 
 
 async def send_history(request):
-    try:
-        print(request.rel_url)
-        for i in request_que:
-            del (req_buffer[i])
-        request_que.clear()
-        restart_deamon()
-        return web.json_response({"msg": "cleared_queue"})
-    except Exception as e:
-        return web.json_response({'msg': 'error' + str(e)})
+    return web.json_response({'msg': 'comming soon'})
+
+
+async def get_input_list(request):
+    return web.json_response({'msg': 'comming soon'})
 
 
 async def index(request):
     print('scrapper.html')
-    return web.FileResponse(os.path.join(os.path.dirname(os.path.realpath(__file__)),'scrapper.html'))
+    return web.FileResponse(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'scrapper.html'))
