@@ -2,11 +2,11 @@ import asyncio
 import re
 import aiohttp
 import random
-from scrapper import host
-from scrapper.HTMLParser.pageParser import exam_name_regx, catch_alert_regx, parse_indexpage
-from scrapper.Utils.captchaDecode import read_captcha
-from scrapper.Utils.exceptionHandler import handle_exception
-from scrapper.Utils.httpUtil import get_page, post_page
+from . import host
+from .HTMLParser.pageParser import exam_name_regx, catch_alert_regx, parse_indexpage
+from .Utils.captchaDecode import read_captcha
+from .Utils.exceptionHandler import handle_exception
+from .Utils.httpUtil import get_page, post_page
 
 
 async def get_exam_name(indexpage_url):

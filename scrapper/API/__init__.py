@@ -29,7 +29,6 @@
 # print("Server started successfully")
 #
 # my_loop.run_until_complete(site.start())
-from scrapper import my_loop
-from scrapper.deamon import entry
+from scrapper import app
 
 

@@ -1,7 +1,7 @@
-import scrapper
-from scrapper.deamon import entry
+from . import deamon
+from . import my_loop
 
 
 def restart_deamon():
-    scrapper.entry_task.cancel()
-    scrapper.entry_task = scrapper.my_loop.create_task(entry())
+    deamon.entry_task.cancel()
+    deamon.entry_task = my_loop.create_task(deamon.entry())

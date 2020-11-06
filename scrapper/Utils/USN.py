@@ -1,13 +1,13 @@
-def usn_generator(clg_code='1cr', batches=['16'], depts=['cs', 'ec'], file_=None):
+def usn_generator(clg_code='1cr', batches=['16'], depts=['cs', 'ec'], file_=None, limit=300):
     if not file_:
         for dept in depts:
             for batch in batches:
-                for number in range(1, 2):
+                for number in range(1, limit):
                     change_section = yield clg_code + batch + dept + str(number).zfill(3)
                     if change_section is True:
                         break
                 dip = batch[0] + str(int(batch[1]) + 1)  # change
-                for number in range(400, 401):
+                for number in range(400, limit):
                     change_section = yield clg_code + dip + dept + str(number).zfill(3)
                     if change_section is True:
                         break

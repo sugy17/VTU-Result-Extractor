@@ -9,6 +9,8 @@ from scrapper.executer import async_executer
 from scrapper.requestChronology import get_exam_name
 
 
+entry_task = ''
+
 async def entry():
     # global request_que, resultpage_url, indexpage_url, current, exam_name, resultpage_url
 
@@ -44,7 +46,7 @@ async def entry():
                 request_que[tuple(current)]['error'] = 'Err in fetching index page...aborting'
                 continue
             usn_gen = usn_generator(clg_code='1cr', batches=[batch],
-                                    depts=[dept])
+                                    depts=[dept], limit=100)
             while True:
                 usns.clear()
                 try:

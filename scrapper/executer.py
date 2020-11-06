@@ -1,8 +1,8 @@
-from scrapper.HTMLParser.pageParser import parse_resultpage
-from scrapper.Store.dataFiles import populate_file_structure
-from scrapper.requestChronology import get_resultpage
-from scrapper.Utils.exceptionHandler import handle_exception
-from scrapper import req_buffer, current
+from .HTMLParser.pageParser import parse_resultpage
+from .Store.dataFiles import populate_file_structure
+from .requestChronology import get_resultpage
+from .Utils.exceptionHandler import handle_exception
+from . import req_buffer, current
 
 
 async def async_executer(event_loop, invalid_count, usns, files_structure, indexpage_url, resultpage_url):

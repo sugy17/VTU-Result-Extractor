@@ -2,10 +2,10 @@ import aiohttp
 import aiohttp_cors
 from aiohttp import web
 
-import scrapper
-from scrapper import app, my_loop
-from scrapper.API.routes import get_req, send_stat, clear_queue
-from scrapper.deamon import entry
+from . import deamon
+from . import app, my_loop
+from .API.routes import get_req, send_stat, clear_queue
+from .deamon import entry
 
 # Add endpoints
 app.add_routes([web.get('/start', get_req),
@@ -30,5 +30,5 @@ runner = aiohttp.web.AppRunner(app)
 my_loop.run_until_complete(runner.setup())
 site = aiohttp.web.TCPSite(runner, '0.0.0.0', 8000)
 my_loop.run_until_complete(site.start())
-scrapper.entry_task = my_loop.create_task(entry())
+deamon.entry_task = my_loop.create_task(entry())
 my_loop.run_forever()

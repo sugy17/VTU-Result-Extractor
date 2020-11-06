@@ -3,7 +3,7 @@ from semester_stats_report import ScoreReport, StudentReport, SubjectReport
 from semester_stats_report import SemesterClient
 import csv
 from typing import Set
-from scrapper import db_url
+from . import db_url
 
 
 def chunk(lst, n):

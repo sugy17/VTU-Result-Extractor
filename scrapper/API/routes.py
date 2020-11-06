@@ -1,6 +1,7 @@
 from aiohttp import web
-from scrapper import req_buffer, request_que, current
-from scrapper.diagnostics import restart_deamon
+from .. import req_buffer, request_que, current
+from ..diagnostics import restart_deamon
+
 
 
 async def send_stat(request):
