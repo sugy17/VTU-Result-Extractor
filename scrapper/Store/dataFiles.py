@@ -4,7 +4,8 @@ import aiofiles
 from ..Utils.exceptionHandler import handle_exception
 
 
-def populate_file_structure(files_structure, usn, name, sems, result):
+def populate_file_structure(files_structure, usn, name, sems, result, save=True):
+    send_res = []
     for j in range(0, len(sems)):
         sem = sems[j]
         dept = re.findall(r'[0-9]([a-z]{2}|[a-z]{3}])[0-9]*?', usn)[1]
@@ -22,7 +23,10 @@ def populate_file_structure(files_structure, usn, name, sems, result):
         # for row in rows:
         #     files_structure[file][-1].extend(row.text.strip().replace(',', '').split('\n'))
         print(*files_structure[file][-1], sep=',')
-
+        if not save:
+            send_res.append(files_structure[file][-1])
+    if not save:
+        return send_res
 
 async def create_files(files_structure, dir_name):
     try:

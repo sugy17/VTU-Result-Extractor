@@ -1,7 +1,8 @@
 import os
 from aiohttp import web
-from .. import req_buffer, request_que, current
+from .. import req_buffer, request_que, current, my_loop
 from ..diagnostics import restart_deamon
+from ..executer import async_executer
 
 
 async def send_stat(request):
@@ -51,6 +52,19 @@ async def clear_queue(request):
         return web.json_response({'msg': 'error' + str(e)})
 
 
+async def send_res(request):
+    try:
+        usn = request.rel_url.query.get('usn').lower()
+        url = request.rel_url.query.get('url')
+        indexpage_url = "/".join(url.split('/')[-2:])
+        resultpage_url = indexpage_url.replace('index.php', 'resultpage.php')
+        print(request.rel_url)
+        #print(indexpage_url,resultpage_url,usn)
+        return web.json_response(await async_executer(my_loop, 0, [usn], {}, indexpage_url, resultpage_url, False))
+    except Exception as e:
+        return web.json_response({'data': 'ops...error-detail:' + str(e)})
+
+
 async def send_history(request):
     return web.json_response({'msg': 'comming soon'})
 
@@ -62,3 +76,8 @@ async def get_input_list(request):
 async def index(request):
     print('scrapper.html')
     return web.FileResponse(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'scrapper.html'))
+
+
+async def usn_ui(request):
+    print('scrapper.html')
+    return web.FileResponse(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'usn.html'))

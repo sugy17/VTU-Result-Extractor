@@ -5,10 +5,10 @@ from .Utils.exceptionHandler import handle_exception
 from . import req_buffer, current
 
 
-async def async_executer(event_loop, invalid_count, usns, files_structure, indexpage_url, resultpage_url):
+async def async_executer(event_loop, invalid_count, usns, files_structure, indexpage_url, resultpage_url, save=True):
     tasks = []
     for usn in usns:
-        tasks.append((event_loop.create_task(get_resultpage(usn,indexpage_url, resultpage_url)), usn))
+        tasks.append((event_loop.create_task(get_resultpage(usn, indexpage_url, resultpage_url)), usn))
     for task, usn in tasks:
         resultpage = await task
         if resultpage == "invalid":
@@ -22,9 +22,8 @@ async def async_executer(event_loop, invalid_count, usns, files_structure, index
             print('error while processing:' + usn)
             continue
         # print(usn + "  " + name)
-        req_buffer[tuple(current)]['usn'] = usn
-        populate_file_structure(files_structure, usn, name, sems, result)
+        if save:
+            req_buffer[tuple(current)]['usn'] = usn
+            populate_file_structure(files_structure, usn, name, sems, result)
+        return populate_file_structure(files_structure, usn, name, sems, result, save)
     return invalid_count
-
-
-
