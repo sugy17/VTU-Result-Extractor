@@ -25,5 +25,6 @@ async def async_executer(event_loop, invalid_count, usns, files_structure, index
         if save:
             req_buffer[tuple(current)]['usn'] = usn
             populate_file_structure(files_structure, usn, name, sems, result)
-        return populate_file_structure(files_structure, usn, name, sems, result, save)
+        else:
+            return populate_file_structure(files_structure, usn, name, sems, result, save)
     return invalid_count

@@ -43,9 +43,12 @@ async def entry():
             if exam_name != 'err' or len(exam_name) < 35:
                 print('Sucessefully fetched indexpage ... proceeding')
                 print(exam_name)
+                req_buffer[tuple(current)]['status'] = 'processing...'
             else:
                 print('Err in fetching index page...aborting')
-                req_buffer[tuple(current)]['error'] = 'Err in fetching index page...aborting'
+                req_buffer[tuple(current)]['error'] = 'Err in fetching index page...'
+                del(req_buffer[tuple(current)])
+                del (request_que[tuple(current)])
                 continue
             usn_gen = usn_generator(clg_code='1cr', batches=[batch],
                                     depts=[dept], limit=300)

@@ -6,7 +6,4 @@ services:
     ports:
       - ${scrapper_port:-8000}:8000
     volumes:
-      - csv-data:/DATA
-volumes:
-  csv-data:
-    name: scrapper_csv-data
+      - ./scrapper_csv-data:/DATA

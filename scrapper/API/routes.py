@@ -52,6 +52,20 @@ async def clear_queue(request):
         return web.json_response({'msg': 'error' + str(e)})
 
 
+async def reset(request):
+    try:
+        print(request.rel_url)
+        for i in request_que:
+            del (req_buffer[i])
+        request_que.clear()
+        for i in req_buffer:
+            del (req_buffer[i])
+        restart_deamon()
+        return web.json_response({"msg": "reinitialised"})
+    except Exception as e:
+        return web.json_response({'msg': 'error' + str(e)})
+
+
 async def send_res(request):
     try:
         usn = request.rel_url.query.get('usn').lower()
