@@ -12,13 +12,13 @@ from .Utils.httpUtil import get_page, post_page
 async def get_exam_name(indexpage_url):
     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ttl_dns_cache=500, ssl=False)) as  session:
         index_page = await get_page(session, host + indexpage_url)
-    print(host+indexpage_url)
+    print(host + indexpage_url)
     if len(index_page) < 5000:
         return 'err'
     return exam_name_regx.findall(index_page, re.DOTALL)[0]
 
 
-async def get_resultpage(usn, indexpage_url ,resultpage_url):
+async def get_resultpage(usn, indexpage_url, resultpage_url, save=True):
     # global ccount
     retry_count = 0
     # cookie = {'PHPSESSID': 'q6k5bedrobcjob6opttgg11i14'+str(ccount)}
@@ -30,12 +30,15 @@ async def get_resultpage(usn, indexpage_url ,resultpage_url):
                     index_page = await get_page(session, host + indexpage_url)
                 except Exception as e:
                     handle_exception(e)
-                    await asyncio.sleep(random.uniform(0, 3))
-                    continue
+                    if save:
+                        await asyncio.sleep(random.uniform(0, 3))
+                    # continue
                 if len(index_page) < 5000:
                     retry_count += 1
-                    if retry_count > 4:
+                    if not save and retry_count > 3:
                         return None  # return meaning full error codes or throw exception
+                    else:
+                        await asyncio.sleep(5)
                     continue
                 try:
                     img_src, token = parse_indexpage(index_page)

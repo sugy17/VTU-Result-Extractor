@@ -5,30 +5,7 @@
     <title>Scrapper</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"> -->
-    <style>        
-    p {
-        max-width: 100%;
-        max-height: 100px;
-        white-space: nowrap;
-        overflow-x:scroll;
-        width: 100%;
-        height: auto;
-        background-color: rgb(173, 187, 187,0.4);
-    }
-    p::-webkit-scrollbar {
-        height: 5px;
-    }
-
-    p::-webkit-scrollbar-track {
-        box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-        border-radius: 2px;
-    }
-
-    p::-webkit-scrollbar-thumb {
-        background-color: rgb(153, 153, 153);
-        outline: 1px solid rgb(77, 104, 131);
-        border-radius: 2px;
-    }
+    <style>
     .loader {
         display: inline-block;
         vertical-align: middle;
@@ -57,12 +34,13 @@
 
 <body>
     <center>
-        <input type="text" id="usn" placeholder="Enter usn for eg-1cr17cs156" value="1cr17cs154" style="width: 30%;">
+        <input type="text" id="usn" placeholder="Enter usn for eg-1cr17cs156" value="1cr16cs027" style="width: 30%;">
         <input type="text" id="url" placeholder="Enter url" value="https://results.vtu.ac.in/AS_CBCS/index.php" style="width: 30%;">
         <input type="button" id="submit" onclick="getrange()" value="GET">
         <div class="loader" style="visibility:hidden" id="load"></div><br>
         <div id="response"></div>
     </center>
+
     <script>
         var api = "/";
         function getrange() {
@@ -83,7 +61,7 @@
                         //document.getElementById("response").innerHTML +='<p>' + this.responseText + '</p>';
                         var marks = JSON.parse(this.responseText);
                         for(i in marks)
-                            document.getElementById("response").innerHTML +='<p>' + marks[i] + '</p>';
+                            document.getElementById("response").innerHTML +='<p><code>' + marks[i] + '</code></p>';
                     }
                 };
                 xhttp.open("GET", api+"individual?usn=" + usn[i]+"&url="+url, true);

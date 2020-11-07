@@ -8,7 +8,7 @@ from . import req_buffer, current
 async def async_executer(event_loop, invalid_count, usns, files_structure, indexpage_url, resultpage_url, save=True):
     tasks = []
     for usn in usns:
-        tasks.append((event_loop.create_task(get_resultpage(usn, indexpage_url, resultpage_url)), usn))
+        tasks.append((event_loop.create_task(get_resultpage(usn, indexpage_url, resultpage_url, save)), usn))
     for task, usn in tasks:
         resultpage = await task
         if resultpage == "invalid":
@@ -20,6 +20,8 @@ async def async_executer(event_loop, invalid_count, usns, files_structure, index
         except Exception as e:
             handle_exception(e)
             print('error while processing:' + usn)
+            if not save:
+                return ["Unable to connect to vtu site"]
             continue
         # print(usn + "  " + name)
         if save:
@@ -27,4 +29,6 @@ async def async_executer(event_loop, invalid_count, usns, files_structure, index
             populate_file_structure(files_structure, usn, name, sems, result)
         else:
             return populate_file_structure(files_structure, usn, name, sems, result, save)
+    if save:
+        return ["invalid usn"]
     return invalid_count
