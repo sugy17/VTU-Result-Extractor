@@ -22,10 +22,11 @@ def populate_file_structure(files_structure, usn, name, sems, result, save=True)
                 files_structure[file][-1].append(sub.text.strip().replace(',', '').replace('\t', ''))
         # for row in rows:
         #     files_structure[file][-1].extend(row.text.strip().replace(',', '').split('\n'))
-        print(*files_structure[file][-1], sep=',')
+        # print(*files_structure[file][-1], sep=',')
         if not save:
             send_res.append(files_structure[file][-1])
     if not save:
+        print(*files_structure[file][-1], sep=',')
         return send_res
 
 async def create_files(files_structure, dir_name):

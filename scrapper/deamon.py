@@ -1,6 +1,6 @@
 import asyncio
 
-from . import my_loop, req_buffer, current, request_que
+from . import my_loop, request_history, current, request_que
 from .Store.dataFiles import create_files
 from .Utils.USN import usn_generator
 from .Utils.exceptionHandler import handle_exception
@@ -25,14 +25,13 @@ async def entry():
             await asyncio.sleep(3)
         url, batch, dept, exam = request_que[0]
         current[:] = [url, batch, dept, exam]
-        req_buffer[tuple(current)]['status'] = 'processing'
         indexpage_url = "/".join(url.split('/')[-2:])
         resultpage_url = indexpage_url.replace('index.php', 'resultpage.php')
         # print(indexpage_url,resultpage_url)
         try:
-            while (True):
+            while True:
                 await asyncio.sleep(3)
-                req_buffer[tuple(current)]['status'] = 'trying to connect to vtu site'
+                request_history[tuple(current)]['status'] = 'trying to connect to vtu site'
                 try:
                     exam_name = await my_loop.create_task(get_exam_name(indexpage_url))
                     exam_name = exam_name.replace('/', '_')
@@ -43,12 +42,12 @@ async def entry():
             if exam_name != 'err' or len(exam_name) < 35:
                 print('Sucessefully fetched indexpage ... proceeding')
                 print(exam_name)
-                req_buffer[tuple(current)]['status'] = 'processing...'
+                request_history[tuple(current)]['status'] = 'processing...'
             else:
                 print('Err in fetching index page...aborting')
-                req_buffer[tuple(current)]['error'] = 'Err in fetching index page...'
-                del(req_buffer[tuple(current)])
-                del (request_que[tuple(current)])
+                request_history[tuple(current)]['error'] = 'Err in fetching index page...'
+                # del(request_history[tuple(current)])
+                # del (request_que[tuple(current)])
                 continue
             usn_gen = usn_generator(clg_code='1cr', batches=[batch],
                                     depts=[dept], limit=300)
@@ -71,7 +70,7 @@ async def entry():
                 invalid_count = await my_loop.create_task(
                     async_executer(my_loop, invalid_count, usns, files_structure, indexpage_url, resultpage_url))
             # send_files_to_db(exam_name)
+            request_history[tuple(current)]['status'] = 'complete'
             request_que.pop(0)
-            req_buffer[tuple(current)]['status'] = 'complete'
         except Exception as e:
             handle_exception(e, 'notify')

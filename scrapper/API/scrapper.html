@@ -12,14 +12,21 @@
             Queue:<div id="queue"></div>
             url:<input type="text" id="url" value="https://results.vtu.ac.in/AS_CBCS/index.php" />
             batch:<input type="text" id="batch" value="16" />
-            dept:<input type="text" id="dept" value="cs" />
+            dept:<select id="dept">
+                <option value="cs" selected>cs</option>
+                <option value="all" >all</option>
+                <option value="ec" >ec</option>
+                <option value="is" >is</option>
+                <option value="me" >me</option>
+                <option value="cv" >cv</option>
+            </select>
             exam:<input type="text" id="exam" />
             <script>document.getElementById('exam').value = (new Date()).getFullYear();</script>
             <button onclick="start()">GO</button>
 <!--            <button onclick="stats()">STATUS</button>-->
 <!--            <button onclick="sendReq(api+'clear_queue', display, 'status')">CANCEL ALL JOBS</button>-->
             <button  onclick="location.href=api+'DATA'">DATA FILES</button>
-            <button  onclick="location.href=api+'usn'">USN search</button>
+            <button  onclick="location.href=api+'usn'">get by USN</button>
             <br><br><b>Status:</b>
             <p id="status"></p>
             <script type="text/javascript">
@@ -32,7 +39,13 @@
                     batch = document.getElementById('batch').value;
                     dept = document.getElementById('dept').value;
                     exam = document.getElementById('exam').value;
-                    sendReq(api + 'start' + "?url=" + url + "&dept=" + dept + "&batch=" + batch + "&exam=" + exam, display, 'status');
+                    if(dept=="all"){
+                        depts = ["cs","ec","is","cv","me"]
+                        for(i in depts)
+                            sendReq(api + 'start' + "?url=" + url + "&dept=" + depts[i] + "&batch=" + batch + "&exam=" + exam, display, 'status');
+                    }
+                    else
+                        sendReq(api + 'start' + "?url=" + url + "&dept=" + dept + "&batch=" + batch + "&exam=" + exam, display, 'status');
                 }
                 function stats() {
                     url = document.getElementById('url').value;

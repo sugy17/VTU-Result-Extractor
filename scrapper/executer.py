@@ -2,7 +2,7 @@ from .HTMLParser.pageParser import parse_resultpage
 from .Store.dataFiles import populate_file_structure
 from .requestChronology import get_resultpage
 from .Utils.exceptionHandler import handle_exception
-from . import req_buffer, current
+from . import request_history, current
 
 
 async def async_executer(event_loop, invalid_count, usns, files_structure, indexpage_url, resultpage_url, save=True):
@@ -25,7 +25,7 @@ async def async_executer(event_loop, invalid_count, usns, files_structure, index
             continue
         # print(usn + "  " + name)
         if save:
-            req_buffer[tuple(current)]['usn'] = usn
+            request_history[tuple(current)]['usn'] = usn
             populate_file_structure(files_structure, usn, name, sems, result)
         else:
             return populate_file_structure(files_structure, usn, name, sems, result, save)

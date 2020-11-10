@@ -6,7 +6,7 @@ db_url = "https://semdata.rxav.pw/"
 
 
 request_que = []
-req_buffer = {}
+request_history = {}
 current = []
 
 my_loop = asyncio.get_event_loop()
