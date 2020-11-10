@@ -19,7 +19,7 @@ except:
 app.add_routes([web.get('/start', get_req),
                 web.get('/status', send_stat),
                 web.get('/reset', reset),
-                web.static('/DATA', '/DATA', show_index=True),
+                web.static('/DATA', 'DATA', show_index=True),
                 web.get('/', index),
                 web.get('/usn', usn_ui),
                 web.get('/individual', send_res)])

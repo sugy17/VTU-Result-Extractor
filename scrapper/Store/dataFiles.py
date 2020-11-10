@@ -16,7 +16,6 @@ def populate_file_structure(files_structure, usn, name, sems, result, save=True)
         if file not in files_structure:
             files_structure[file] = []
         files_structure[file].append([usn, name, sem])
-        # temp.append([usn,name,sems[j]])
         for row in rows:
             for sub in row.find_all('div', {'class': 'divTableCell'}):
                 files_structure[file][-1].append(sub.text.strip().replace(',', '').replace('\t', ''))
@@ -32,13 +31,8 @@ def populate_file_structure(files_structure, usn, name, sems, result, save=True)
 async def create_files(files_structure, dir_name):
     try:
         try:
-            dir_name = os.path.join('DATA/', dir_name)
+            dir_name = os.path.join('DATA', dir_name)
             os.mkdir(dir_name)
-        # except Exception as e:
-        #     handle_exception(e,"expected")
-        #     dir_name = dir_name + '_updated'
-        #     try:
-        #         os.mkdir(dir_name)
         except Exception as e:
             handle_exception(e, "expected")
             print(dir_name + ' arlready exists')

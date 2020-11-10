@@ -6,4 +6,4 @@ services:
     ports:
       - ${scrapper_port:-8000}:8000
     volumes:
-      - ./scrapper_csv-data:/DATA
+      - ./DATA:./DATA
