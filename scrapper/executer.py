@@ -29,6 +29,6 @@ async def async_executer(event_loop, invalid_count, usns, files_structure, index
             populate_file_structure(files_structure, usn, name, sems, result)
         else:
             return populate_file_structure(files_structure, usn, name, sems, result, save)
-    if save:
+    if not save:
         return ["invalid usn"]
     return invalid_count
