@@ -17,7 +17,7 @@ async def send_stat(request):
             request_history[tuple(current)]['queue'] = [i[1] + i[2] for i in request_que]
             return web.json_response(request_history[tuple(current)])
         else:
-            return web.json_response({"queue": "No jobs in queue"})
+            return web.json_response({"usn":"-","status":"","queue": "No jobs in queue"})
     except Exception as e:
         return web.json_response([str(e)])
 
@@ -32,10 +32,10 @@ async def get_req(request):
         if (url, batch, dept, exam) not in request_history or request_history[(url, batch, dept, exam)]['status'] == 'error':
             request_que.append((url, batch, dept, exam))
             request_history[(url, batch, dept, exam)] = {'usn': '-', 'status': 'added'}
-        if len(current) == 0:
             current[:] = [url, batch, dept, exam]
-        request_history[tuple(current)]['queue'] = [i[1] + i[2] for i in request_que]
-        return web.json_response(request_history[tuple(current)])
+        cur = (url, batch, dept, exam)
+        request_history[cur]['queue'] = [i[1] + i[2] for i in request_que]
+        return web.json_response(request_history[cur])
     except Exception as e:
         return web.json_response({'msg': 'error'})
 
@@ -70,10 +70,18 @@ async def send_res(request):
         indexpage_url = "/".join(url.split('/')[-2:])
         resultpage_url = indexpage_url.replace('index.php', 'resultpage.php')
         print(request.rel_url)
-        #print(indexpage_url,resultpage_url,usn)
         return web.json_response(await async_executer(my_loop, 0, [usn], {}, indexpage_url, resultpage_url, False))
     except Exception as e:
         return web.json_response({'data': 'ops...error-detail:' + str(e)})
+
+
+async def update_history(request):
+    url = request.rel_url.query.get('url')
+    batch = request.rel_url.query.get('batch')
+    dept = request.rel_url.query.get('dept')
+    exam = request.rel_url.query.get('exam')
+    request_history[(url, batch, dept, exam)] = {"status": "complete", "usn": "N/A"}
+    return web.json_response({"msg":"success"})
 
 
 async def send_history(request):
