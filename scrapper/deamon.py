@@ -47,7 +47,7 @@ async def entry():
                 # del (request_que[tuple(current)])
                 continue
             usn_gen = usn_generator(clg_code='1cr', batches=[batch],
-                                    depts=[dept], limit=5)
+                                    depts=[dept], limit=300)
             while True:
                 usns.clear()
                 try:
