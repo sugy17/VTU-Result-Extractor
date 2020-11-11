@@ -11,8 +11,9 @@ def populate_file_structure(files_structure, usn, name, sems, result, save=True)
         dept = re.findall(r'[0-9]([a-z]{2}|[a-z]{3}])[0-9]*?', usn)[1]
         batch = '20' + re.findall(r'[a-z]([0-9][0-9])[a-z]', usn)[0]
         rows = result[j].find_all('div', {'class': 'divTableRow'})[1:]
+        dip = '-dip' if int(re.findall(r'[0-9]{3}', usn)[0]) >= 400 else ''
         scheme = '20' + rows[0].text.strip().replace(',', '').split('\n')[0][0:2]
-        file = 'Data-' + dept.upper() + '-' + batch + '-' + scheme + '-' + sem + ('-arrear' if j != 0 else '') + '.csv'
+        file = 'Data-' + dept.upper() + '-' + batch + '-' + scheme + '-' + sem + ('-arrear' if j != 0 else '') +dip+ '.csv'
         if file not in files_structure:
             files_structure[file] = []
         files_structure[file].append([usn, name, sem])
@@ -27,6 +28,7 @@ def populate_file_structure(files_structure, usn, name, sems, result, save=True)
     if not save:
         print(*files_structure[file][-1], sep=',')
         return send_res
+
 
 async def create_files(files_structure, dir_name):
     try:

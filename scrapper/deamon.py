@@ -12,7 +12,6 @@ entry_task = ''
 
 
 async def entry():
-    invalid_count = 0
     files_structure = {}
     usns = []
     while True:
@@ -24,7 +23,6 @@ async def entry():
         current[:] = [url, batch, dept, exam]
         indexpage_url = "/".join(url.split('/')[-2:])
         resultpage_url = indexpage_url.replace('index.php', 'resultpage.php')
-        # print(indexpage_url,resultpage_url)
         try:
             while True:
                 await asyncio.sleep(3)
@@ -46,8 +44,9 @@ async def entry():
                 # del(request_history[tuple(current)])
                 # del (request_que[tuple(current)])
                 continue
-            usn_gen = usn_generator(clg_code='1cr', batches=[batch],
-                                    depts=[dept], limit=300)
+            usn_gen = usn_generator(clg_code='1cr', batch=batch,
+                                    dept=dept, limit=300)
+            invalid_count = 0
             while True:
                 usns.clear()
                 try:

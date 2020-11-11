@@ -12,7 +12,7 @@ from .Utils.httpUtil import get_page, post_page
 async def get_exam_name(indexpage_url):
     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ttl_dns_cache=500, ssl=False)) as  session:
         index_page = await get_page(session, host + indexpage_url)
-    print(host + indexpage_url)
+    # print(host + indexpage_url)
     if len(index_page) < 5000:
         return 'err'
     return exam_name_regx.findall(index_page, re.DOTALL)[0]

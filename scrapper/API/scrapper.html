@@ -13,12 +13,14 @@
             url:<input type="text" id="url" value="https://results.vtu.ac.in/AS_CBCS/index.php" />
             batch:<input type="text" id="batch" value="16" />
             dept:<select id="dept">
-                <option value="cs" selected>cs</option>
-                <option value="all" >all</option>
-                <option value="ec" >ec</option>
-                <option value="is" >is</option>
-                <option value="me" >me</option>
-                <option value="cv" >cv</option>
+                <option value="all" selected>all</option>
+                <option value="cs" >computer science (cse)</option>
+                <option value="ec" >electronics (ece)</option>
+                <option value="is" >info science (ise)</option>
+                <option value="me" >mechnaical (me) </option>
+                <option value="cv" >civil (cv)</option>
+                <option value="te" >tele communication (te)</option>
+<!--            <option value="mca" >Master of Computer Applications (mca)</option>-->
             </select>
             exam:<input type="text" id="exam" />
             <script>document.getElementById('exam').value = (new Date()).getFullYear();</script>
@@ -40,7 +42,7 @@
                     dept = document.getElementById('dept').value;
                     exam = document.getElementById('exam').value;
                     if(dept=="all"){
-                        depts = ["cs","ec","is","cv","me"]
+                        depts = ["cs","ec","is","cv","me","te"]  //add mca
                         for(i in depts)
                             sendReq(api + 'start' + "?url=" + url + "&dept=" + depts[i] + "&batch=" + batch + "&exam=" + exam, display, 'status');
                     }
