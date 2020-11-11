@@ -8,14 +8,11 @@ from .dbClient import send_files_to_db
 from .executer import async_executer
 from .requestChronology import get_exam_name
 
-
 entry_task = ''
 
-async def entry():
-    # global request_que, resultpage_url, indexpage_url, current, exam_name, resultpage_url
 
+async def entry():
     invalid_count = 0
-    # usn_gen = usn_generator(file_ = 'usns.txt')#clg_code='1cr', batches=['16'], depts=['ec'])
     files_structure = {}
     usns = []
     while True:
@@ -50,7 +47,7 @@ async def entry():
                 # del (request_que[tuple(current)])
                 continue
             usn_gen = usn_generator(clg_code='1cr', batches=[batch],
-                                    depts=[dept], limit=300)
+                                    depts=[dept], limit=5)
             while True:
                 usns.clear()
                 try:

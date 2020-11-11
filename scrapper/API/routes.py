@@ -40,18 +40,6 @@ async def get_req(request):
         return web.json_response({'msg': 'error'})
 
 
-async def clear_queue(request):
-    try:
-        print(request.rel_url)
-        for i in request_que:
-            del (request_history[i])
-        request_que.clear()
-        restart_deamon()
-        return web.json_response({"msg": "cleared_queue"})
-    except Exception as e:
-        return web.json_response({'msg': 'error == ' + str(e)})
-
-
 async def reset(request):
     try:
         print(request.rel_url)
@@ -85,7 +73,7 @@ async def update_history(request):
 
 
 async def send_history(request):
-    return web.json_response({'msg': 'comming soon'})
+    return web.json_response(request_history)
 
 
 async def get_input_list(request):

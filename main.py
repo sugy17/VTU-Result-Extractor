@@ -5,7 +5,7 @@ from aiohttp import web
 
 from scrapper import deamon
 from scrapper import app, my_loop
-from scrapper.API.routes import get_req, send_stat, clear_queue, index, usn_ui, send_res, reset, update_history
+from scrapper.API.routes import get_req, send_stat,send_history ,index, usn_ui, send_res, reset, update_history
 from scrapper.deamon import entry
 
 try:
@@ -18,6 +18,7 @@ except:
 app.add_routes([web.get('/start', get_req),
                 web.get('/status', send_stat),
                 web.get('/reset', reset),
+                web.get('/history', send_history),
                 web.get('/update_history', update_history),
                 web.static('/DATA', 'DATA', show_index=True),
                 web.get('/', index),
