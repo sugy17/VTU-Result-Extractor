@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Scrapper</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"> -->
+    <style>
+
+        * {
+             box-sizing: border-box;
+             padding: 0;
+             margin: 0;
+        }
+
+        .loader {
+            display: inline-block;
+            vertical-align: middle;
+            border: 5px solid #f3f3f3;
+            -webkit-animation: spin 1s linear infinite;
+            animation: spin 1s linear infinite;
+            border-top: 5px solid #555;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+        }
+
+        /* Safari */
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* table{
+            width:100%;
+            max-width:"900px";
+            min-width:"750px";
+        } */
+
+        table {
+            margin-left: auto;
+            margin-right: auto;
+            color: #333;
+            font-family: Helvetica, Arial, sans-serif;
+            width:100%;
+            max-width:800px;
+            min-width:750px;
+            border-collapse: collapse;
+            border-spacing: 0;
+            border-top: solid;
+            padding: 1%;
+        }
+
+        td,
+        th {
+            border: 1px solid transparent;
+            /* No more visible border */
+            height: 30px;
+        }
+
+        th {
+            background: #DFDFDF;
+            /* Darken header a bit */
+            font-weight: bold;
+        }
+
+        td {
+            background: #FAFAFA;
+            text-align: center;
+        }
+
+        /* toast style */
+
+        .toast_wrapper,
+        .toast {
+             box-sizing: border-box;
+             pointer-events: none;
+        }
+
+        .toast_wrapper {
+             position: absolute;
+             z-index: 9999999999;
+             width: 100%;
+             height: 100vh;
+             display: flex;
+             flex-direction: column;
+             align-items: center;
+             justify-content: flex-end;
+             background-color: rgba(0, 0, 0, 0);
+        }
+
+        .toast {
+             color: #ffffff;
+             margin-bottom: 20px;
+             padding: 10px 20px;
+             border-radius: 50px;
+             background-color: rgba(0, 0, 0, 0.5);
+             opacity: 0;
+             transition: opacity 0.2s;
+        }
+
+        .toast_show {
+             opacity: 1;
+        }
+
+    </style>
+
+
+</head>
+
+<body>
+    <center>
+        <input type="text" id="usn" placeholder="Enter usn for eg-1cr17cs156" value="1cr16cs027" style="width: 30%;">
+        <input type="text" id="url" placeholder="Enter url" value="https://results.vtu.ac.in/AS_CBCS/index.php"
+            style="width: 30%;">
+        <input type="button" id="submit" onclick="getrange()" value="TEST">
+        <div class="loader" style="visibility:hidden" id="load"></div><br>
+    </center>
+    <textarea value="" id="cpytxt" style="display: none;"></textarea>
+    <div id="response"></div>
+
+    <script>
+        var api = "/";
+        function getrange() {
+            clear();
+            usn = document.getElementById("usn").value;
+            url = document.getElementById("url").value;
+            getRes([usn], url);
+        }
+        function getRes(usn, url) {
+            for (i in usn) {
+                var xhttp = new XMLHttpRequest();
+                document.getElementById('load').style.visibility = 'visible';
+                xhttp.onerror = function (){
+                        document.getElementById("response").innerHTML = '<center><p><code>Somenthing went wrong</code></p></center>';
+                        document.getElementById('load').style.visibility = 'hidden';
+                    };
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById('load').style.visibility = 'hidden';
+                        //build_html +='<p>' + this.responseText + '</p>';
+                        var marks = JSON.parse(this.responseText);
+                        var build_html ='';
+                        try {
+                            if(marks['data'][0][2] < '0' || marks['data'][0][2] > '9'){
+                                document.getElementById("response").innerHTML = '<br><center><div style="font-size:30px">' + marks['data'][0] +'</div></center>';
+                                return;
+                            }
+                            build_html = '<br><br><center><button onclick="cpyToClipboard()">Copy as CSV</button></center>';
+                            build_html += '<br><center><div style="font-size:30px">' + marks['data'][i][0].toUpperCase() + '&nbsp;&nbsp;&nbsp;' + marks['data'][i][1]+'</div></center>';
+                            cpytxt = "";
+                            for (i in marks['data']) {
+                                cpytxt += marks['data'][i]+"\n";
+                                build_html += '<br><br><table><caption style="text-align:left"><b>Semester:' + marks['data'][i][2] + '</b></caption><tr><th>code</th><th>subject name</th><th>int</th><th>ext</th><th>total</th><th>pass/fail</th></tr>';
+                                for (j = 3; j < marks['data'][i].length; j++) {
+                                    if ((j - 3) % 6 == 0)
+                                        build_html += '<tr>';
+                                    build_html += '<td>' + marks['data'][i][j] + '</td>';
+                                    if ((j - 3) % 6 == 5)
+                                        build_html += '</tr>';
+                                }
+                                build_html += '</table>';
+                            }
+                            document.getElementById("response").innerHTML = build_html;
+                            document.getElementById("cpytxt").value = cpytxt;
+                            myShowToast("Stored result successfully in database");
+                        } catch (e) {
+                            build_html += '<center><p><code>' + marks['data'][i] + '</code></p></center>';
+                            document.getElementById("response").innerHTML = build_html;
+                        }
+                    }
+                };
+                xhttp.open("GET", api + "input/usn?usn=" + usn[i] + "&url=" + url, true);
+                xhttp.send();
+            }
+        }
+        function clear() {
+            response = document.getElementById("response");
+            response.innerHTML = "";
+        }
+        class Toast {
+             constructor() {
+                  // create variable to store the toast IDs
+                  this.toastQueue = [];
+                  // make a wrapper for the toast
+                  this.toastWrapper = document.createElement("div");
+                  this.toastWrapper.setAttribute("class", "toast_wrapper");
+                  document.body.insertAdjacentElement("afterbegin", this.toastWrapper);
+             }
+
+             generateRandomID() {
+                  const chars = "abcdefghijklmnopqrstuvwxyz";
+                  let id = "";
+                  for (let i = 0; i < 5; i++) {
+                       id += chars.charAt(Math.floor(Math.random() * 26));
+                  }
+                  return id;
+             }
+
+             createToast(id, message) {
+                  const toast = document.createElement("span");
+                  toast.setAttribute("class", "toast");
+                  toast.setAttribute("id", id);
+                  toast.innerHTML = message;
+                  this.toastWrapper.appendChild(toast);
+
+                  this.toastQueue.push(id);
+
+                  // smooth animation
+                  setTimeout(() => {
+                       toast.classList.add("toast_show");
+                  }, 200);
+             }
+
+             showToast(message) {
+                  const id = this.generateRandomID();
+                  this.createToast(id, message);
+
+                  // the toast will disappear in 5 seconds
+                  setTimeout(() => {
+                       this.removeToast();
+                  }, 5000); // use miliseconds
+             }
+
+             removeToast() {
+                  const toast = document.querySelector("#" + this.toastQueue[0]);
+                  toast.classList.remove("toast_show");
+
+                  this.toastQueue.shift();
+
+                  setTimeout(() => {
+                       this.toastWrapper.removeChild(toast);
+                  }, 200);
+             }
+        }
+
+        function myShowToast(msg){
+            const toast = new Toast();
+            toast.showToast(msg);
+        }
+
+        function cpyToClipboard() {
+            var cpytxt = document.getElementById("cpytxt");
+            cpytxt.style.display = "";
+            cpytxt.select();
+            cpytxt.setSelectionRange(0, 99999)
+            document.execCommand("copy");
+            cpytxt.style.display = "none";
+            myShowToast("Copied to clipboard");
+        }
+    </script>
+</body>
+
+</html>
