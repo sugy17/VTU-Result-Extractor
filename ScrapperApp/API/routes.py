@@ -396,7 +396,7 @@ async def usn_ui(request):
             description: invalid HTTP Method
     """
     print('usn_ui.html')
-    return web.FileResponse(os.path.join('..', 'static', 'usn.html'))
+    return web.FileResponse(os.path.join('..', 'default_ui', 'usn.html'))
 
 
 async def list_ui(request):
@@ -412,7 +412,7 @@ async def list_ui(request):
             description: invalid HTTP Method
     """
     print('scrapper.html')
-    return web.FileResponse(os.path.join('..', 'static', 'list.html'))
+    return web.FileResponse(os.path.join('..', 'default_ui', 'list.html'))
 
 
 async def batch_ui(request):
@@ -428,7 +428,7 @@ async def batch_ui(request):
             description: invalid HTTP Method
     """
     print('list_ui.html')
-    return web.FileResponse(os.path.join('..', 'static', 'batch.html'))
+    return web.FileResponse(os.path.join('..', 'default_ui', 'batch.html'))
 
 
 # initialisation helper
