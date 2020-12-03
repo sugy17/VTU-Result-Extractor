@@ -102,7 +102,7 @@ async def list_inp(request):
         handle_exception(e, risk="ok")
         data = await request.post()
 
-    if len(data['usns']<10):
+    if len(data['usns'])<10:
         return web.json_response({'queue': [progress.to_json() for progress in REQUEST_QUEUE]})
 
     progress = Progress(rtype=1, inp=data['usns'], reval=data['reval'])
