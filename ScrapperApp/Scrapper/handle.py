@@ -78,10 +78,10 @@ async def handle_list(event_loop, progress):
             localdb.commit()
             return
         try:
-            success = False#send_files_to_db(exam_name, new_files)
+            success = await send_files_to_db(exam_name, new_files)
             if not success:
                 # await sync_subject_details()
-                success = False#send_files_to_db(exam_name, new_files)
+                success = await send_files_to_db(exam_name, new_files)
                 if not success:
                     print('something went wrong while sending to database')
                     progress.description = 'ERROR: data not sent to semstats database'

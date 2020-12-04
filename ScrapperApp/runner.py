@@ -9,13 +9,11 @@ from aiohttp.web import run_app
 from aiohttp_swagger import *
 
 from Models.models import init_db
-from API import app #, swagger
+from API import app #, swaggers
 from API.routes import initialise_routes
 
 from Scrapper import daemon
 
-
-# Todo imp! fix make semstat-report unblocking
 
 # todo check autocommit and autoflush
 # todo aiohttp[speedups]

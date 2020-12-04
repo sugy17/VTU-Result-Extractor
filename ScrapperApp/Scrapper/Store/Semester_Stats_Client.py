@@ -17,13 +17,13 @@ def chunk(lst, n):
         yield lst[i: i + n]
 
 
-def send_subs_to_db(sub_keep):
+async def send_subs_to_db(sub_keep):
     cl = SemesterClient(semstats_url)
     # Send Subject Reports Second.
-    cl.bulk().subject(list(sub_keep))
+    await cl.bulk().subject(list(sub_keep))
 
 
-def send_student_to_db(_data):
+async def send_student_to_db(_data):
     if len(_data) == 0:
         print("semstat-report: Student data was empty")
         return True
@@ -64,17 +64,17 @@ def send_student_to_db(_data):
     try:
         # put student report obj
         print(stu)
-        cl.student(usn).put(stu)
+        await cl.student(usn).put(stu)
     except Exception as e:
         handle_exception(e)
     # Send Subject Reports Second.
-    cl.bulk().subject(list(sub_keep))
+    await cl.bulk().subject(list(sub_keep))
     # Send the Score Reports AT THE LAST:
-    cl.bulk().scores(list(sco_keep))
+    await cl.bulk().scores(list(sco_keep))
     return True
 
 
-def send_files_to_db(exam_name, files):
+async def send_files_to_db(exam_name, files):
     if len(files) == 0:
         print("semstat-report: no files recived to send.")
         return True
@@ -122,10 +122,10 @@ def send_files_to_db(exam_name, files):
 
         # Data is scrubbed!
         # Send the StudentReports First
-        cl.bulk().student(list(stu_keep))
+        await cl.bulk().student(list(stu_keep))
         # Send Subject Reports Second.
-        cl.bulk().subject(list(sub_keep))
+        await cl.bulk().subject(list(sub_keep))
         # Send the Score Reports AT THE LAST:
-        cl.bulk().scores(list(sco_keep))
+        await cl.bulk().scores(list(sco_keep))
         return True
 

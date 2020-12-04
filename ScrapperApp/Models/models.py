@@ -151,8 +151,7 @@ class Progress(Base):
 # creates database
 def init_db():
     try:
-        # Base.metadata.drop_all(localdb_engine) #todo change
-        print("sqlite: DB Create mode - use if exisiting.")
+        print("sqlite: DB Create mode - use db file if exisiting.")
         Base.metadata.create_all(localdb_engine)
     except Exception as e:
         handle_exception(e)

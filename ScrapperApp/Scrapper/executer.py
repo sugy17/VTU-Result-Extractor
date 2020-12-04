@@ -48,7 +48,7 @@ async def async_executer(usn, files_structure, indexpage_url, resultpage_url, lo
         localdb.commit()
         return [str(e)]  # ["Unable to connect to vtu site"]
     data = populate_file_structure(files_structure, usn.usn, name, sems, result, save)
-    sent = send_student_to_db(data)
+    sent = await send_student_to_db(data)
     print(data)
     if not sent:
         usn.status = 5
