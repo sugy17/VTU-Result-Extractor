@@ -6,6 +6,8 @@ from sqlalchemy import create_engine, Column, Integer, String, MetaData, SmallIn
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 
+from Scrapper.Utils.exceptionHandler import handle_exception
+
 DB_URI = 'sqlite:///../data/ServerManagement.db'
 localdb_engine = create_engine(DB_URI)  # , echo=True)
 Session = sessionmaker()
@@ -22,7 +24,7 @@ codes = {
     2: 'queued',
     3: 'processing',
     4: 'trying to connect to vtu',
-    5: 'not sent to semstat db',
+    5: 'not sent to semstat db yet',
     6: 'updated',
     7: 'canceled',
     8: 'invalid',
@@ -44,6 +46,9 @@ class Exam(Base):
     def __init__(self, name):
         self.name = name
 
+    def to_json(self):
+        return {'id': self.id, 'name': self.name}
+
 
 # Url Model
 class Url(Base):
@@ -57,6 +62,9 @@ class Url(Base):
 
     def __init__(self, url):
         self.name = url
+
+    def to_json(self):
+        return {'id': self.id, 'name': self.name}
 
 
 # UsnTracker Model (dynamic)
@@ -74,6 +82,9 @@ class Usn(Base):
         self.exam_id = exam_id
         self.status = 2
         self.description = None
+
+    def to_json(self):
+        return {'usn': self.usn, 'status': codes[self.status]}
 
 
 # RequestTracker Model
@@ -135,3 +146,14 @@ class Progress(Base):
         else:
             d['url'] = None
         return d
+
+
+# creates database
+def init_db():
+    try:
+        # Base.metadata.drop_all(localdb_engine) #todo change
+        print("sqlite: DB Create mode - use if exisiting.")
+        Base.metadata.create_all(localdb_engine)
+    except Exception as e:
+        handle_exception(e)
+        print(e)
