@@ -146,7 +146,7 @@
                     url = document.getElementById('url').value;
                     inp = document.getElementById('usns').value;
                     reval = document.getElementById("reval").checked;
-                    sendJson(api + 'input/list', {"url": url,"usns" : inp,"reval":reval}, display, 'status');
+                    sendJson(api + 'input/list?url='+url+'&reval='+reval, {"usns" : inp}, display, 'status');
                 }
                 function stats() {
                     getStats(api+'queue', display, 'status');
