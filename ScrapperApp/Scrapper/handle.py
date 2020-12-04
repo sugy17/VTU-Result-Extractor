@@ -1,7 +1,7 @@
 import asyncio
 
 from Models.models import session as localdb
-from Models.serverFunctions import get_exam_id,check_usn
+from Models.crud import get_exam_id,check_usn
 
 from .Store.dataFiles import create_files
 from .Utils.USN import usn_inp
@@ -72,6 +72,11 @@ async def handle_list(event_loop, progress):
             invalid_count = await event_loop.create_task(
                 batch_executer(event_loop, invalid_count, usns, files_structure, indexpage_url, resultpage_url,
                                localdb=localdb, progress=progress, list_inp=True))
+        if len(new_files) == 0:
+            progress.status = 1
+            progress.description = 'no data generated'
+            localdb.commit()
+            return
         try:
             success = False#send_files_to_db(exam_name, new_files)
             if not success:
@@ -86,12 +91,5 @@ async def handle_list(event_loop, progress):
             print('something went wrong while sending to database')
             progress.description = 'ERROR: data not sent to semstats database'
             progress.status = 5
-        if len(new_files) != 0:
-            progress.status = 1
-            localdb.commit()
-        else:
-            progress.status = 0
-            progress.description = 'no data generated'
-            localdb.commit()
     except Exception as e:
         handle_exception(e, 'notify')

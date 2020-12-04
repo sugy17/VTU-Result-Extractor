@@ -27,6 +27,7 @@ async def batch_executer(event_loop, invalid_count, usns, files_structure, index
             localdb.commit()
             continue
         # print(usn + "  " + name)
+        usn.status = 1
         progress.usn = usn.usn
         localdb.commit()
         populate_file_structure(files_structure, usn.usn, name, sems, result, save, progress.id)
