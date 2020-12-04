@@ -8,14 +8,11 @@ from aiohttp.web import run_app
 
 from aiohttp_swagger import *
 
-from Models.serverFunctions import init_db
-from API import app, swagger
+from Models.models import init_db
+from API import app #, swagger
 from API.routes import initialise_routes
 
 from Scrapper import daemon
-
-# todo add routes - EXAMS,URLs
-# todo add USN check route
 
 
 # Todo imp! fix make semstat-report unblocking
@@ -23,7 +20,6 @@ from Scrapper import daemon
 # todo check autocommit and autoflush
 # todo aiohttp[speedups]
 # todo migrate to aiosqlite
-# todo standardise paths irrespective of current working dir
 
 
 # initialise DB for request management
@@ -38,10 +34,12 @@ my_loop = asyncio.get_event_loop()
 app['entry_task'] = my_loop.create_task(daemon.entry(my_loop))
 app['event_loop'] = my_loop
 
-# Run Web-App on current event loop
+# setup swagger docs at '/'
 setup_swagger(app, swagger_url='//',
-              description="Main routes are /input/list , /history , /queue are fumctional and can be used for prototyping.Remaining routes are under development to satisfy non-functional requirements and QOL improvements.",
+              description="All routes are functional. Main route /input/list can be used for prototyping.Remaining routes are to fullfill non functional requirements and increase QOL",
               title="Scrapper API",
               api_version="1.0.0",
               contact="sugy17cs@cmrit.ac.in")
+
+# Run Web-App on current event loop
 run_app(app, port=8000)
