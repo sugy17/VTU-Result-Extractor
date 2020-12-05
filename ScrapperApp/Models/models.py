@@ -84,7 +84,7 @@ class Usn(Base):
         self.description = None
 
     def to_json(self):
-        return {'usn': self.usn, 'status': codes[self.status]}
+        return {'usn': self.usn, 'status': codes[self.status], 'url_id': self.url_id}
 
 
 # RequestTracker Model

@@ -66,12 +66,22 @@ def query_exam_name(exam_id):
 
 def query_usn_data(url_id, exam_id, usn=None):
     res = []
+
+    if not url_id:
+        if not usn:
+            for i in session.query(Usn).filter(Usn.exam_id == exam_id):
+                res.append(i.to_json())
+            return res
+        for i in session.query(Usn).filter(Usn.exam_id == exam_id, Usn.usn == usn):
+            res.append(i.to_json())
+        return res
+
     if not usn:
         for i in session.query(Usn).filter(Usn.url_id == url_id, Usn.exam_id == exam_id):
             res.append(i.to_json())
-    else:
-        return session.query(Usn).filter(Usn.url_id == url_id, Usn.exam_id == exam_id, Usn.usn == usn).first().to_json()
-    return res
+        return res
+
+    return session.query(Usn).filter(Usn.url_id == url_id, Usn.exam_id == exam_id, Usn.usn == usn).first().to_json()
 
 # def get_table(exam_name):
 #     EXAM = Table(

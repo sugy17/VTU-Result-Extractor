@@ -379,7 +379,7 @@ async def exam_get(request):
 async def usn_get(request):
     """
     ---
-    description: This end-point  fetches all usn records with the specified  url_id and exam_id.
+    description: This end-point fetches all usn records with the specified  url_id and exam_id.Note: If no url_id is specified there will be multiple records with the same usn.
     tags:
     - DATA
     parameters:
@@ -392,7 +392,7 @@ async def usn_get(request):
       name: url_id
       description: url id of the url in db.
       type: string
-      required: true
+      required: false
     responses:
         "200":
             description: successful operation.  Returns json .
@@ -401,7 +401,10 @@ async def usn_get(request):
     """
     try:
         exam_id = request.match_info['exam_id']
-        url_id = request.rel_url.query.get('url_id')
+        try:
+            url_id = request.rel_url.query.get('url_id')
+        except:
+            url_id = None
         return web.json_response(query_usn_data(url_id, exam_id))
     except:
         return web.json_response({"error": "ERROR:Not found"}, status=404)
@@ -410,7 +413,7 @@ async def usn_get(request):
 async def usn_instance_get(request):
     """
     ---
-    description: This end-point  fetches info of a particular usn record, used to check if usn scrapped or not. Takes in url_id and exam_id as get parameters.
+    description: This end-point fetches info of particular usn, used to check if usn is scrapped from a particlar url if url_id is specified along with exam_id, else returns usn along with all urls as separate records.
     tags:
     - DATA
     parameters:
@@ -428,7 +431,7 @@ async def usn_instance_get(request):
       name: url_id
       description: url id of the url in db.
       type: string
-      required: true
+      required: false
     responses:
         "200":
             description: successful operation. Returns json .
@@ -439,7 +442,10 @@ async def usn_instance_get(request):
     """
     exam_id = request.match_info['exam_id']
     usn = request.match_info['usn'].lower()
-    url_id = request.rel_url.query.get('url_id')
+    try:
+        url_id = request.rel_url.query.get('url_id')
+    except:
+        url_id = None
     try:
         return web.json_response(query_usn_data(url_id, exam_id, usn))
     except:
@@ -447,7 +453,7 @@ async def usn_instance_get(request):
 
 
 # static helpers
-async def favicon(args):
+async def favicon(request):
     print('favicon.ico')
     return web.FileResponse(os.path.join('..', 'default_ui', 'favicon.ico'))
 

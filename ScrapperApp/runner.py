@@ -14,7 +14,9 @@ from API.routes import initialise_routes
 
 from Scrapper import daemon
 
+# todo add search routes exam_id - usn (to find url)
 # todo add logger , remove prints
+
 # todo aiohttp[speedups]
 # todo migrate to aiosqlite
 # todo tests
