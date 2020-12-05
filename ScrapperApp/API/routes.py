@@ -379,7 +379,7 @@ async def exam_get(request):
 async def usn_get(request):
     """
     ---
-    description: This end-point fetches all usn records with the specified  url_id and exam_id.Note: If no url_id is specified there will be multiple records with the same usn.
+    description: This end-point fetches all usn records with the specified  url_id and exam_id. **Note** - If no url_id is specified there will be multiple records with the same usn.
     tags:
     - DATA
     parameters:
