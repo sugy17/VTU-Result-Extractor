@@ -30,18 +30,15 @@ def populate_file_structure(files_structure, usn, name, sems, result, save=True,
 
 async def create_files(files_structure, dir_name):
     try:
-        try:
-            dir_name = os.path.join('..', 'data', 'files', dir_name)
-            os.mkdir(dir_name)
-        except Exception as e:
-            handle_exception(e, "expected")
-            print(dir_name + ' arlready exists')
+        dir_name = os.path.join('..', 'data', 'files', dir_name)
+        os.makedirs(dir_name, exist_ok=True)
         for file in files_structure:
             fp = await aiofiles.open(os.path.join(dir_name, file), mode='w')
             for record in files_structure[file]:
                 await fp.write(str(record).replace('[', '').replace('\'', '').replace(', ', ',').replace(']', ',\n'))
             await fp.close()
-        print(files_structure)
+        #print(files_structure)
+        print("created files sucessfully")
     except Exception as e:
         handle_exception(e)
     new_files = list(files_structure.keys())

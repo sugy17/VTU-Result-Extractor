@@ -46,10 +46,10 @@ async def single_usn(request):
     try:
         usn = request.rel_url.query.get('usn').lower()
         url = request.rel_url.query.get('url')
-        try:
-            force = bool(request.rel_url.query.get('force'))
-        except:
-            force = False
+        # try:
+        #     force = request.rel_url.query.get('force') in ['true','True']
+        # except:
+        #     force = True
         indexpage_url = "/".join(url.split('/')[-2:])
         resultpage_url = indexpage_url.replace('index.php', 'resultpage.php')
         print(request.rel_url)
@@ -77,6 +77,7 @@ async def single_usn(request):
         exam_id = get_exam_id(exam)
         usn_obj = check_usn(usn, url_id, exam_id, force=True)
         data = await async_executer(usn_obj, {}, indexpage_url, resultpage_url, localdb=localdb, save=False)
+        print(data)
         sent = await send_student_to_db(data)
         if not sent:
             print("something went wrong while sending to databse")

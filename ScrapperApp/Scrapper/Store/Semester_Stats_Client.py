@@ -63,8 +63,11 @@ async def send_student_to_db(_data):
                 )
             )
 
-        # put student report obj
-        await cl.student(usn).put(stu)
+        try:
+            # put student report obj
+            await cl.student(usn).put(stu)
+        except:
+            pass
         # Send Subject Reports Second.
         await cl.bulk().subject(list(sub_keep))
         # Send the Score Reports AT THE LAST:
