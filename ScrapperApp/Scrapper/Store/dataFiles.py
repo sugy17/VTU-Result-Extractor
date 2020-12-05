@@ -21,13 +21,10 @@ def populate_file_structure(files_structure, usn, name, sems, result, save=True,
         for row in rows:
             for sub in row.find_all('div', {'class': 'divTableCell'}):
                 files_structure[file][-1].append(sub.text.strip().replace(',', '').replace('\t', ''))
-        # for row in rows:
-        #     files_structure[file][-1].extend(row.text.strip().replace(',', '').split('\n'))
-        # print(*files_structure[file][-1], sep=',')
         if not save:
             send_res.append(files_structure[file][-1])
     if not save:
-        print(*files_structure[file][-1], sep=',')
+        # print(*files_structure[file][-1], sep=',')   ## debug
         return send_res
 
 

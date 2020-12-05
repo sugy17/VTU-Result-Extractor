@@ -28,8 +28,8 @@ def usn_inp(inp):
             lwr = inp[7:10]
             upr = inp[18:]
             if lwr > upr:
-                lwr,upr = upr,lwr
-            for j in range(int(lwr),int(upr)+2):
+                lwr, upr = upr, lwr
+            for j in range(int(lwr), int(upr) + 2):
                 yield inp[:7] + str(j).zfill(3)
         else:
             yield i.lower()

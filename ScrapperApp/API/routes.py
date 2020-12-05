@@ -1,4 +1,5 @@
 import os
+
 from aiohttp import web
 from aiohttp.web_routedef import post, delete
 from aiohttp.web import get, static
@@ -9,10 +10,9 @@ from Scrapper import REQUEST_QUEUE
 from Scrapper.executer import async_executer
 from Scrapper.Utils.exceptionHandler import handle_exception
 from Scrapper.requestChronology import get_exam_name
+from Scrapper.Store.Semester_Stats_Client import send_student_to_db
 
 from .diagnostics import restart_deamon
-
-__version__ = '0.1.0'
 
 
 async def single_usn(request):
@@ -54,15 +54,20 @@ async def single_usn(request):
         resultpage_url = indexpage_url.replace('index.php', 'resultpage.php')
         print(request.rel_url)
         if len(usn) != 10:
-            return web.json_response(["invalid usn"])
+            return web.json_response({'data': ["invalid usn"]})
         url_id = get_url_id(url)
         i = 0
         while True:
-            exam = await get_exam_name(indexpage_url)
+            try:
+                exam = await get_exam_name(indexpage_url)
+            except Exception as e:
+                handle_exception(e)
+                exam = 0
             if exam != 0:
                 if len(exam) < 35 or force:
                     break
                 else:
+                    # todo desgin
                     return web.json_response({'data': [
                         "is this the right exam name displayed on site? Yes No'" + exam + "' if not contact admin."]})
             elif i > 3:
@@ -71,8 +76,16 @@ async def single_usn(request):
         exam = exam.replace('/', '_')
         exam_id = get_exam_id(exam)
         usn_obj = check_usn(usn, url_id, exam_id, force=True)
-        return web.json_response(
-            {'data': await async_executer(usn_obj, {}, indexpage_url, resultpage_url, localdb=localdb, save=False)})
+        data = await async_executer(usn_obj, {}, indexpage_url, resultpage_url, localdb=localdb, save=False)
+        sent = await send_student_to_db(data)
+        if not sent:
+            print("something went wrong while sending to databse")
+            usn_obj.status = 5
+            localdb.commit()
+        else:
+            usn_obj.status = 1
+            localdb.commit()
+        return web.json_response({'data': data})
     except Exception as e:
         return web.json_response({'data': ['ERROR:' + str(e)]})
 
@@ -122,47 +135,13 @@ async def list_inp(request):
         return web.json_response({'queue': [progress.to_json() for progress in REQUEST_QUEUE]})
 
     url = request.rel_url.query.get('url')
-    reval = bool(request.rel_url.query.get('reval'))
+    reval = request.rel_url.query.get('reval') in ['True','true']
     progress = Progress(rtype=1, inp=data['usns'], reval=reval)
     progress.url_id = get_url_id(url)
     localdb.add(progress)
     localdb.commit()
     REQUEST_QUEUE.append(progress)
     return web.json_response({'queue': [progress.to_json() for progress in REQUEST_QUEUE]})
-
-
-# async def batch_inp(request):
-#     # """
-#     # ---
-#     # description: This end-point accept batch and dept along with url and queues the request.
-#     # tags:
-#     # - INPUT
-#
-#
-#     # responses:
-#     #     "200":
-#     #         description: successful operation. Returns queue and progress
-#     #     "405":
-#     #         description: invalid HTTP Method
-#     # """
-#     data = await request.json()
-#     progress = Progress(batch=data['batch'], dept=data['dept'], rtype=0)
-#     progress.url_id = get_url_id(data['url'])
-#     flag = True
-#     for i in REQUEST_QUEUE:
-#         if i.url == data['url'] and i.batch == data['batch'] and i.dept == data['dept']:
-#             flag = False
-#             break
-#     if flag:
-#         localdb.add(progress)
-#         localdb.commit()
-#         REQUEST_QUEUE.append(progress)
-#     return web.json_response(
-#         {
-#             'queue': [progress.to_json() for progress in REQUEST_QUEUE]
-#         },
-#         status=200
-#     )
 
 
 async def queue_get(request) -> web.json_response:
@@ -467,6 +446,10 @@ async def usn_instance_get(request):
 
 
 # static helpers
+async def favicon(args):
+    print('favicon.ico')
+    return web.FileResponse(os.path.join('..', 'default_ui', 'favicon.ico'))
+
 async def usn_ui(request):
     """
     ---
@@ -520,8 +503,7 @@ def initialise_routes(app):
     app.add_routes(
         [
             static('/DATA', os.path.join('..', 'data', 'files'), show_index=True),
-            # get('/ui/batch', batch_ui, allow_head=False),
-            # post('/batch', batch_inp),
+            get('/ui/favicon.ico', favicon, allow_head=False),
             get('/ui/test', usn_ui, allow_head=False),
             get('/input/usn', single_usn, allow_head=False),
             get('/ui/list', list_ui, allow_head=False),

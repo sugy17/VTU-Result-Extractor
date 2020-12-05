@@ -16,4 +16,4 @@ async def read_captcha(captcha_blob):
     bytesio = io.BytesIO(img_buffer)
     pil_img = pimg.open(bytesio)
     return re.sub('[\W_]+', '', pytesseract.image_to_string(pil_img))
-    return re.sub('[\W_]+', '', pytesseract.image_to_string("pic.png"))
+    # return re.sub('[\W_]+', '', pytesseract.image_to_string("pic.png"))

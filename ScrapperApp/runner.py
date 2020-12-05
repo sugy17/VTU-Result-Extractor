@@ -14,10 +14,10 @@ from API.routes import initialise_routes
 
 from Scrapper import daemon
 
-
-# todo check autocommit and autoflush
+# todo add logger , remove prints
 # todo aiohttp[speedups]
 # todo migrate to aiosqlite
+# todo tests
 
 
 # initialise DB for request management
@@ -34,7 +34,8 @@ app['event_loop'] = my_loop
 
 # setup swagger docs at '/'
 setup_swagger(app, swagger_url='//',
-              description="All routes are functional. Main route /input/list can be used for prototyping.Remaining routes are to fullfill non functional requirements and increase QOL",
+              description="All routes are functional. Main route /input/list can be used for prototyping.Remaining "
+                          "routes are to fullfill non functional requirements and increase QOL",
               title="Scrapper API",
               api_version="1.0.0",
               contact="sugy17cs@cmrit.ac.in")

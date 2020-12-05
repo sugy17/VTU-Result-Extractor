@@ -38,9 +38,11 @@ def check_usn(usn, url_id, exam_id, force=False):
     except Exception as e:
         session.rollback()
         handle_exception(e, risk='normal')
-        row = session.query(Usn).filter(Usn.usn == row.usn, Usn.url == row.url).first()
+        row = session.query(Usn).filter(Usn.usn == usn, Usn.url_id == url_id).first()
         if row.status == 0 or row.status == 5 or force:
+            print("redoing:"+usn)
             return row
+        print("skipped :" + usn)
         return None
 
 

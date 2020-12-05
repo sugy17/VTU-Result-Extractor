@@ -56,7 +56,7 @@ async def handle_list(event_loop, progress):
             try:
                 group_count = 0
                 while group_count < 3:
-                    usn = check_usn(next(usn_gen), progress.url_id, progress.exam_id, force=progress.update or progress.reval)
+                    usn = check_usn(next(usn_gen), progress.url_id, progress.exam_id,progress.update or progress.reval)
                     if not usn:
                         continue
                     usns.append(usn)
@@ -64,14 +64,14 @@ async def handle_list(event_loop, progress):
             except Exception as e:
                 await event_loop.create_task(
                     batch_executer(event_loop, invalid_count, usns, files_structure, indexpage_url, resultpage_url,
-                                   localdb=localdb, progress=progress, list_inp=True)
+                                   localdb=localdb, progress=progress, ignore_invalid_count=True)
                 )
                 new_files.extend(await create_files(files_structure, exam_name))
                 handle_exception(e, 'expected')
                 break
             invalid_count = await event_loop.create_task(
                 batch_executer(event_loop, invalid_count, usns, files_structure, indexpage_url, resultpage_url,
-                               localdb=localdb, progress=progress, list_inp=True))
+                               localdb=localdb, progress=progress, ignore_invalid_count=True))
         if len(new_files) == 0:
             progress.status = 1
             progress.description = 'no data generated'

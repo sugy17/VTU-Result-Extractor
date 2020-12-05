@@ -6,14 +6,14 @@ from .requestChronology import get_resultpage
 
 
 async def batch_executer(event_loop, invalid_count, usns, files_structure, indexpage_url, resultpage_url, localdb=None,
-                         progress=None, save=True, list_inp=False):
+                         progress=None, save=True, ignore_invalid_count=False):
     tasks = []
     for usn in usns:
         tasks.append((event_loop.create_task(get_resultpage(usn.usn, indexpage_url, resultpage_url, save)), usn))
     for task, usn in tasks:
         resultpage = await task
-        if resultpage == 8 and not list_inp:
-            invalid_count += 1
+        if resultpage == 8:
+            invalid_count += ignore_invalid_count
             usn.status = 8
             localdb.commit()
             continue
@@ -48,12 +48,4 @@ async def async_executer(usn, files_structure, indexpage_url, resultpage_url, lo
         localdb.commit()
         return [str(e)]  # ["Unable to connect to vtu site"]
     data = populate_file_structure(files_structure, usn.usn, name, sems, result, save)
-    sent = await send_student_to_db(data)
-    print(data)
-    if not sent:
-        usn.status = 5
-        localdb.commit()
-    else:
-        usn.status = 1
-        localdb.commit()
     return data
