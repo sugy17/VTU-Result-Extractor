@@ -22,14 +22,20 @@ def usn_generator(clg_code='1cr', batch='16', dept='cs', file_=None, limit=300):
 
 
 def usn_inp(inp):
-    for i in inp.split(","):
-        if '-' in i:
-            inp = i.lower()
-            lwr = inp[7:10]
-            upr = inp[18:]
-            if lwr > upr:
-                lwr, upr = upr, lwr
-            for j in range(int(lwr), int(upr) + 2):
-                yield inp[:7] + str(j).zfill(3)
-        else:
-            yield i.lower()
+    try:
+        inp = inp.lower()
+        for i in inp.split(","):
+            if '-' in i:
+                lwr = int(i[7:10])
+                upr = int(i[18:])
+                if lwr > upr:
+                    lwr, upr = upr, lwr
+                if upr - lwr > 300:
+                    upr = 300 + lwr
+                    print("Reducing range to 300 usns!!")
+                for j in range(lwr, upr + 1):
+                    yield inp[:7] + str(j).zfill(3)
+            else:
+                yield i.lower()
+    except Exception as e:
+        print(e)

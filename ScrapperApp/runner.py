@@ -9,12 +9,12 @@ from aiohttp.web import run_app
 from aiohttp_swagger import *
 
 from Models.models import init_db
-from API import app #, swaggers
+from API import app
 from API.routes import initialise_routes
 
 from Scrapper import daemon
 
-# todo add search routes exam_id - usn (to find url)
+
 # todo add logger , remove prints
 
 # todo aiohttp[speedups]
@@ -27,7 +27,6 @@ init_db()
 
 # initialise interface (API) for app control and tracking requests
 initialise_routes(app)
-# initialise_routes(swagger)
 
 # Run scrapper listener (Daemon)
 my_loop = asyncio.get_event_loop()

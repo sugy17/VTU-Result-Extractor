@@ -8,7 +8,7 @@ hrefs_regx = re.compile(r'href.*?"(.*?\.pdf)"')
 
 
 def parse_syllabuspage(page):
-    print(len(hrefs_regx.findall(page)),hrefs_regx.findall(page))
+    print(len(hrefs_regx.findall(page)), hrefs_regx.findall(page))
     return hrefs_regx.findall(page)
 
 
@@ -18,7 +18,7 @@ def parse_indexpage(page):
     token = soup.find('input')['value']
     return img_src, token
 
-
+# same logic used for parsing reval page also, separation done while sending files to db
 def parse_resultpage(page):
     soup = bs(page, 'html.parser')
     # print(soup.find_all('div',{'class':'divTableCell'}))
@@ -27,3 +27,4 @@ def parse_resultpage(page):
             soup(text=sem_regx)]  # sems=[ e[11] for e in soup(text=sem_regx)]
     result = soup.find_all('div', {'class': 'divTableBody'})
     return name, sems, result
+

@@ -125,9 +125,9 @@
 
 <body>
     <center>
-        <input type="text" id="usn" placeholder="Enter usn for eg-1cr17cs156" value="1cr16cs027" style="width: 30%;">
-        <input type="text" id="url" placeholder="Enter url" value="https://results.vtu.ac.in/AS_CBCS/index.php"
-            style="width: 30%;">
+        usn:<input type="text" id="usn" placeholder="Enter usn for eg-1cr17cs156" value="1cr16cs027" style="width: 30%;"/>
+        url:<input type="text" id="url" placeholder="Enter url" value="https://results.vtu.ac.in/AS_CBCS/index.php" style="width: 30%;"/>
+        reval:<input type="checkbox" id="reval" />
         <input type="button" id="submit" onclick="getrange()" value="TEST">
         <div class="loader" style="visibility:hidden" id="load"></div><br>
     </center>
@@ -140,9 +140,10 @@
             clear();
             usn = document.getElementById("usn").value;
             url = document.getElementById("url").value;
-            getRes([usn], url);
+            reval = document.getElementById("reval").checked;
+            getRes([usn], url, reval);
         }
-        function getRes(usn, url) {
+        function getRes(usn, url, reval) {
             for (i in usn) {
                 var xhttp = new XMLHttpRequest();
                 document.getElementById('load').style.visibility = 'visible';
@@ -185,7 +186,7 @@
                         }
                     }
                 };
-                xhttp.open("GET", api + "input/usn?usn=" + usn[i] + "&url=" + url, true);
+                xhttp.open("GET", api + "input/usn?usn=" + usn[i] + "&url=" + url+"&reval=" + reval, true);
                 xhttp.send();
             }
         }

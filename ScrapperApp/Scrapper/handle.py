@@ -49,7 +49,6 @@ async def handle_list(event_loop, progress):
             progress.description = 'ERROR:'+str(e)
             localdb.commit()
             return
-        invalid_count = 0
         new_files.clear()
         while True:
             usns.clear()
@@ -63,15 +62,14 @@ async def handle_list(event_loop, progress):
                     group_count += 1
             except Exception as e:
                 await event_loop.create_task(
-                    batch_executer(event_loop, invalid_count, usns, files_structure, indexpage_url, resultpage_url,
-                                   localdb=localdb, progress=progress, ignore_invalid_count=True)
+                    batch_executer(event_loop, usns, files_structure, indexpage_url, resultpage_url,
+                                   localdb=localdb, progress=progress)
                 )
                 new_files.extend(await create_files(files_structure, exam_name))
                 handle_exception(e, 'expected')
                 break
-            invalid_count = await event_loop.create_task(
-                batch_executer(event_loop, invalid_count, usns, files_structure, indexpage_url, resultpage_url,
-                               localdb=localdb, progress=progress, ignore_invalid_count=True))
+            await event_loop.create_task(batch_executer(event_loop, usns, files_structure, indexpage_url, resultpage_url,
+                                                        localdb=localdb, progress=progress))
         if len(new_files) == 0:
             progress.status = 1
             progress.description = 'no data generated'
@@ -83,13 +81,13 @@ async def handle_list(event_loop, progress):
                 # await sync_subject_details()
                 success = await send_files_to_db(exam_name, new_files)
                 if not success:
-                    print('something went wrong while sending to database')
-                    progress.description = 'ERROR: data not sent to semstats database'
-                    progress.status = 5
+                    raise Exception("something went wrong while sending to database")
         except Exception as e:
             handle_exception(e, 'notify')
-            print('something went wrong while sending to database')
             progress.description = 'ERROR: data not sent to semstats database'
             progress.status = 5
+            return
+        progress.status = 1
+        localdb.commit()
     except Exception as e:
         handle_exception(e, 'notify')

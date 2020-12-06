@@ -94,15 +94,13 @@ class Progress(Base):
 
     url_id = Column(String(50), ForeignKey('Url.id'))
     exam_id = Column(String(50), ForeignKey('Exam.id'))
-    description = Column(String(50))
 
+    description = Column(String(50))
     created_at = Column(String(50))
-    batch = Column(Integer)
     status = Column(SmallInteger)
     usn = Column(String(10))
-    dept = Column(String(8))
-    rtype = Column(SmallInteger)
     inp = Column(String(300))
+
     update = Column(Boolean)
     reval = Column(Boolean)
 
@@ -111,13 +109,8 @@ class Progress(Base):
 
     # UniqueConstraint(url_id, batch, exam_id, dept, rtype)
 
-    def __init__(self, batch=None, dept=None, rtype=1, url_id=None, exam_id=None,
-                 created_at=None, inp=None,
-                 update=False, reval=False):
-        self.batch = batch
-        self.dept = dept
+    def __init__(self, url_id=None, exam_id=None,created_at=None, inp=None,update=False, reval=False):
         self.status = 2
-        self.rtype = rtype
         self.inp = inp
         self.url_id = url_id
         self.exam_id = exam_id
@@ -131,20 +124,13 @@ class Progress(Base):
     # __table_args__ = (Index("HISTORY_IDX", "url", "dept", "batch","exam"),)
 
     def to_json(self):
-        to_serialize = ['id', 'description', 'created_at', 'batch', 'usn', 'inp', 'update', 'reval']
+        to_serialize = ['id', 'status', 'created_at', 'usn', 'inp', 'update', 'reval']
         d = {}
         for attr_name in to_serialize:
             d[attr_name] = getattr(self, attr_name)
-        d['status'] = codes[self.status]
-        d['rtype'] = self.rtype
-        if self.exam_id:
-            d['exam'] = self.exam.name
-        else:
-            d['exam'] = None
-        if self.url_id:
-            d['url'] = self.url.name
-        else:
-            d['url'] = None
+        d['description'] = self.description if self.description else codes[self.status]
+        d['exam'] = self.exam.name if self.exam_id else None
+        d['url'] = self.url.name if self.url_id else None
         return d
 
 

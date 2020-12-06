@@ -33,9 +33,9 @@ async def single_usn(request):
       type: string
       required: true
     - in: query
-      description: Flag to force update usn result
+      description: Flag to indicate reval result or main result
       required: true
-      name: force
+      name: reval
       type: boolean
     responses:
         "200":
@@ -46,7 +46,9 @@ async def single_usn(request):
     try:
         usn = request.rel_url.query.get('usn').lower()
         url = request.rel_url.query.get('url')
-        # try:
+        reval = request.rel_url.query.get('reval') in ["True", "true"]
+        force = True
+        # try: todo #design
         #     force = request.rel_url.query.get('force') in ['true','True']
         # except:
         #     force = True
@@ -67,7 +69,7 @@ async def single_usn(request):
                 if len(exam) < 35 or force:
                     break
                 else:
-                    # todo desgin
+                    # todo #desgin
                     return web.json_response({'data': [
                         "is this the right exam name displayed on site? Yes No'" + exam + "' if not contact admin."]})
             elif i > 3:
@@ -76,7 +78,8 @@ async def single_usn(request):
         exam = exam.replace('/', '_')
         exam_id = get_exam_id(exam)
         usn_obj = check_usn(usn, url_id, exam_id, force=True)
-        data = await async_executer(usn_obj, {}, indexpage_url, resultpage_url, localdb=localdb, save=False)
+        data = await async_executer(usn_obj, {}, indexpage_url, resultpage_url, localdb=localdb, save=False,
+                                    reval=reval)
         print(data)
         sent = await send_student_to_db(data)
         if not sent:
@@ -136,8 +139,8 @@ async def list_inp(request):
         return web.json_response({'queue': [progress.to_json() for progress in REQUEST_QUEUE]})
 
     url = request.rel_url.query.get('url')
-    reval = request.rel_url.query.get('reval') in ['True','true']
-    progress = Progress(rtype=1, inp=data['usns'], reval=reval)
+    reval = request.rel_url.query.get('reval') in ['True', 'true']
+    progress = Progress(inp=data['usns'], reval=reval)
     progress.url_id = get_url_id(url)
     localdb.add(progress)
     localdb.commit()
@@ -456,6 +459,7 @@ async def usn_instance_get(request):
 async def favicon(request):
     print('favicon.ico')
     return web.FileResponse(os.path.join('..', 'default_ui', 'favicon.ico'))
+
 
 async def usn_ui(request):
     """

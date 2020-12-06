@@ -4,7 +4,7 @@ import aiofiles
 from ..Utils.exceptionHandler import handle_exception
 
 
-def populate_file_structure(files_structure, usn, name, sems, result, save=True, rid=0):
+def populate_file_structure(files_structure, usn, name, sems, result, save=True, rid=0, reval=False):
     send_res = []
     for j in range(0, len(sems)):
         sem = sems[j]
@@ -14,7 +14,7 @@ def populate_file_structure(files_structure, usn, name, sems, result, save=True,
         dip = '-dip' if int(re.findall(r'[0-9]{3}', usn)[0]) >= 400 else ''
         scheme = '20' + rows[0].text.strip().replace(',', '').split('\n')[0][0:2]
         file = 'Data-' + dept.upper() + '-' + batch + '-' + scheme + '-' + sem + (
-            '-arrear' if j != 0 else '') + dip + '-Req_' + str(rid) + '.csv'
+            '-arrear' if j != 0 else '') + dip + ('-reval' if reval else '') + '-Req_' + str(rid) + '.csv'
         if file not in files_structure:
             files_structure[file] = []
         files_structure[file].append([usn, name, sem])
@@ -37,7 +37,7 @@ async def create_files(files_structure, dir_name):
             for record in files_structure[file]:
                 await fp.write(str(record).replace('[', '').replace('\'', '').replace(', ', ',').replace(']', ',\n'))
             await fp.close()
-        #print(files_structure)
+        # print(files_structure)
         print("created files sucessfully")
     except Exception as e:
         handle_exception(e)
