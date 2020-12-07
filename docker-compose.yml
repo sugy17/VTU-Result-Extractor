@@ -7,3 +7,4 @@ services:
       - ${scrapper_port:-8000}:8000
     volumes:
       - ./DATA:/project/data
+    restart: unless-stopped
