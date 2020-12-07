@@ -154,7 +154,7 @@
                 function display(res) {
                     js = JSON.parse(res);
                     try{
-                    document.getElementById('status').innerHTML = 'usn:'+ (js['queue'][0]['usn']?js['queue'][0]['usn']: "-") + "<br>status:"+js['queue'][0]['status'];
+                    document.getElementById('status').innerHTML = 'usn:'+ (js['queue'][0]['usn']?js['queue'][0]['usn']: "-") + "<br>status:"+js['queue'][0]['description'];
                     }catch(e){
                         document.getElementById('status').innerHTML = "";
                     }
