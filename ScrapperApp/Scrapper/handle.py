@@ -90,4 +90,6 @@ async def handle_list(event_loop, progress):
         progress.status = 1
         localdb.commit()
     except Exception as e:
+        progress.status = 0
+        progress.description = 'Error: check logs.'
         handle_exception(e, 'notify')

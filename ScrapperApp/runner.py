@@ -16,6 +16,7 @@ from Scrapper import daemon
 
 
 # todo add logger , remove prints
+# todo add reval processing in semstat-report
 
 # todo aiohttp[speedups]
 # todo migrate to aiosqlite
@@ -35,8 +36,10 @@ app['event_loop'] = my_loop
 
 # setup swagger docs at '/'
 setup_swagger(app, swagger_url='//',
-              description="All routes are functional. Main route /input/list can be used for prototyping.Remaining "
-                          "routes are to fullfill non functional requirements and increase QOL",
+              description='''Takes in url and list of USNS, scrapes for results from VTU's
+                site and sweeps them into semstat-database for analysis.All routes are functional.
+                Main route /input/list can be used for prototyping.Remaining
+                routes are to fulfill non functional requirements and increase QOL''',
               title="Scrapper API",
               api_version="1.0.0",
               contact="sugy17cs@cmrit.ac.in")

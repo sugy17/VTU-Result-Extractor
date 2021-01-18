@@ -83,6 +83,12 @@ def query_usn_data(url_id, exam_id, usn=None):
 
     return session.query(Usn).filter(Usn.url_id == url_id, Usn.exam_id == exam_id, Usn.usn == usn).first().to_json()
 
+
+# Pre restart operations
+# def db_pre_restart():
+#     session.query(Progress).filter(Progress.status == 3, )
+
+
 # def get_table(exam_name):
 #     EXAM = Table(
 #         exam_name, metadata,

@@ -81,7 +81,7 @@ async def single_usn(request):
         data = await async_executer(usn_obj, {}, indexpage_url, resultpage_url, localdb=localdb, save=False,
                                     reval=reval)
         print(data)
-        sent = await send_student_to_db(data)
+        sent = await send_student_to_db(data, reval)
         if not sent:
             print("something went wrong while sending to databse")
             usn_obj.status = 5
@@ -195,13 +195,14 @@ async def queue_cancel(request) -> web.json_response:
     """
     request_id = request.match_info['request_id']
     try:
-        for i in REQUEST_QUEUE:
-            if i.id == request_id:
-                i.status = 7
-            del (REQUEST_QUEUE[0])
-            localdb.commit()
-            restart_deamon()
-            return web.json_response({'queue': [progress.to_json() for progress in REQUEST_QUEUE]})
+        for i in range(len(REQUEST_QUEUE)):
+            if str(REQUEST_QUEUE[i].id) == request_id:
+                REQUEST_QUEUE[i].status = 7
+                localdb.commit()
+                del (REQUEST_QUEUE[i])
+                if i == 0:
+                    restart_deamon()
+                return web.json_response({'queue': [progress.to_json() for progress in REQUEST_QUEUE]})
         return web.json_response({"error": "request object not found in queue"}, status=404)
     except Exception as e:
         localdb.rollback()
@@ -277,14 +278,12 @@ async def history_instance_delete(request):
         return web.json_response({"error": "instance not found"}, status=404)
     try:
         localdb.delete(progress)
-        if REQUEST_QUEUE[0].id == progress.id:
-            del (REQUEST_QUEUE[0])
-            restart_deamon()
-        else:
-            for i in range(len(REQUEST_QUEUE)):
-                if REQUEST_QUEUE[i].id == progress.id:
-                    del (REQUEST_QUEUE[i])
-        localdb.commit()
+        for i in range(len(REQUEST_QUEUE)):
+            if str(REQUEST_QUEUE[i].id) == request_id:
+                localdb.commit()
+                del (REQUEST_QUEUE[i])
+                if i == 0:
+                    restart_deamon()
     except Exception as e:
         localdb.rollback()
         return web.json_response({"error": str(e)})

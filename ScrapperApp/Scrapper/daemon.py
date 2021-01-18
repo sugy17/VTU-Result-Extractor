@@ -6,6 +6,8 @@ from . import REQUEST_QUEUE
 
 async def entry(event_loop):
     # await sync_subject_details()  -->  future devlopment
+
+
     while True:
         try:
             while len(REQUEST_QUEUE) == 0:
