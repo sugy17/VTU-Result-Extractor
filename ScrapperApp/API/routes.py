@@ -277,13 +277,13 @@ async def history_instance_delete(request):
     if not progress:
         return web.json_response({"error": "instance not found"}, status=404)
     try:
-        localdb.delete(progress)
         for i in range(len(REQUEST_QUEUE)):
             if str(REQUEST_QUEUE[i].id) == request_id:
-                localdb.commit()
                 del (REQUEST_QUEUE[i])
                 if i == 0:
                     restart_deamon()
+        localdb.delete(progress)
+        localdb.commit()
     except Exception as e:
         localdb.rollback()
         return web.json_response({"error": str(e)})
