@@ -274,6 +274,7 @@ body {
             getStats(api+'queue', display, 'status');
         }
         function display(res) {
+            try {
             js = JSON.parse(res);
             try{
             document.getElementById('status').innerHTML = 'usn:'+ (js['queue'][0]['usn']?js['queue'][0]['usn']: "-") + "<br>status:"+js['queue'][0]['description'];
@@ -290,6 +291,7 @@ body {
                 document.getElementById('queue').innerHTML = 'No requests in queue';
             if (0)                  //add contiditon for compelete
                 clearInterval(timer);
+            } catch (error) {}
         }
 
         function sendJson(url, js,callback, id) {
