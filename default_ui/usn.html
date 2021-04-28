@@ -230,11 +230,11 @@ body {
 <div class="topnav">
     <a  onclick="location.href=api+'ui/list'" onmouseover="" style="cursor: pointer;">HOME</a>
     <a  onclick="location.href=api+'ui/test'" onmouseover="" style="cursor: pointer;">CHECK INTEGRITY</a>
-    <a  onclick="location.href=api+'DATA'" onmouseover="" style="cursor: pointer;">DATA FILES</a>
-    <a  onclick="location.href=api+'info'" onmouseover="" style="cursor: pointer;">API INFO</a>
+    <a  onclick="dataFilesHandler()" onmouseover="" style="cursor: pointer;">DATA FILES</a>
+    <a  onclick="apiInfoHandler()" onmouseover="" style="cursor: pointer;">API INFO</a>
 </div>
 <body>
-    <center class="card">
+    <center class="card" id="content">
         usn:<input type="text" id="usn" placeholder="Enter usn for eg-1cr17cs156" value="1cr16cs027" style="width: 30%;"/>
         url:<input type="text" id="url" placeholder="Enter url" value="https://results.vtu.ac.in/AS_CBCS/index.php" style="width: 30%;"/>
         reval:<input type="checkbox" id="reval" />
@@ -372,6 +372,23 @@ body {
             document.execCommand("copy");
             cpytxt.style.display = "none";
             myShowToast("Copied to clipboard");
+        }
+
+        function apiInfoHandler () {
+            document.getElementById("content").innerHTML = "<iframe id=\"Iframe\"src=\""+api+"info"+"\" width=\"100%\" ></iframe>";
+            iFrameID = document.getElementById("Iframe");
+            iFrameID.addEventListener("load", function() {
+                this.height = "";
+                this.height = this.contentWindow.document.body.scrollHeight + "px";
+            }); 
+        }
+        function dataFilesHandler () {
+            document.getElementById("content").innerHTML = "<iframe id=\"Iframe\"src=\""+api+"DATA"+"\" width=\"100%\" ></iframe>";
+            iFrameID = document.getElementById("Iframe");
+            iFrameID.addEventListener("load", function() {
+                this.height = "";
+                this.height = this.contentWindow.document.body.scrollHeight + "px";
+            }); 
         }
     </script>
 </body>
