@@ -34,7 +34,7 @@ def usn_inp(inp):
                     upr = 300 + lwr
                     print("Reducing range to 300 usns!!")
                 for j in range(lwr, upr + 1):
-                    yield inp[:7] + str(j).zfill(3)
+                    yield i[:7] + str(j).zfill(3)
             else:
                 yield i.lower()
     except Exception as e:
