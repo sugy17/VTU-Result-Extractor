@@ -4,7 +4,7 @@ services:
     image: scrapper:1.0
     build: .
     ports:
-      - ${scrapper_port:-8000}:8000
+      - ${scrapper_port:-8000}:8440
     volumes:
       - ./DATA:/project/data
     restart: unless-stopped
