@@ -517,6 +517,7 @@ def initialise_routes(app):
             get('/ui/test', usn_ui, allow_head=False),
             get('/input/usn', single_usn, allow_head=False),
             get('/ui/list', list_ui, allow_head=False),
+            get('/', list_ui, allow_head=False),
             post('/input/list', list_inp),
             get('/queue', queue_get, allow_head=False),
             delete('/queue/{request_id}', queue_cancel),
