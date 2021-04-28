@@ -23,7 +23,7 @@ def usn_generator(clg_code='1cr', batch='16', dept='cs', file_=None, limit=300):
 
 def usn_inp(inp):
     try:
-        inp = inp.lower()
+        inp = inp.lower().replace('\n',',').replace('\t',',').replace(' ','')
         for i in inp.split(","):
             if '-' in i:
                 lwr = int(i[7:10])
