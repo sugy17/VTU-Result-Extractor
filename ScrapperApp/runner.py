@@ -34,8 +34,8 @@ my_loop = asyncio.get_event_loop()
 app['entry_task'] = my_loop.create_task(daemon.entry(my_loop))
 app['event_loop'] = my_loop
 
-# setup swagger docs at '/'
-setup_swagger(app, swagger_url='//',
+# setup swagger docs at '/info'
+setup_swagger(app, swagger_url='/info',
               description='''Takes in url and list of USNS, scrapes for results from VTU's
                 site and sweeps them into semstat-database for analysis.All routes are functional.
                 Main route /input/list can be used for prototyping.Remaining
@@ -45,4 +45,4 @@ setup_swagger(app, swagger_url='//',
               contact="sugy17cs@cmrit.ac.in")
 
 # Run Web-App on current event loop
-run_app(app, port=8000)
+run_app(app, port=8440)
