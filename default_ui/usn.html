@@ -235,8 +235,14 @@ body {
 </div>
 <body>
     <center class="card" id="content">
-        usn:<input type="text" id="usn" placeholder="Enter usn for eg-1cr17cs156" value="1cr16cs027" style="width: 30%;"/>
-        url:<input type="text" id="url" placeholder="Enter url" value="https://results.vtu.ac.in/AS_CBCS/index.php" style="width: 30%;"/>
+        <h3>CHECK INTEGRITY</h3>
+        <p>
+            Enter an USN along with the correct URL of the index page and check if results are being extracted properly.
+        </p>
+        <br><br>  
+        usn:<input type="text" id="usn" placeholder="Enter an usn for eg-1cr17cs156"  style="width: 50%;"/>
+        <br>
+        url:<input type="text" id="url" placeholder="url of index page for eg- https://results.vtu.ac.in/AS_CBCS/index.php" style="width: 50%;"/>
         reval:<input type="checkbox" id="reval" />
         <input type="button" id="submit" onclick="getrange()" value="TEST">
         <div class="loader" style="visibility:hidden" id="load"></div><br>
