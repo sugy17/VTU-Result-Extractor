@@ -1,5 +1,6 @@
 import os
 
+import aiohttp
 from aiohttp import web
 from aiohttp.web_routedef import post, delete
 from aiohttp.web import get, static
@@ -11,6 +12,8 @@ from Scrapper.executer import async_executer
 from Scrapper.Utils.exceptionHandler import handle_exception
 from Scrapper.requestChronology import get_exam_name
 from Scrapper.Store.Semester_Stats_Client import send_student_to_db
+from Scrapper.Parsers.HTMLParser import parse_for_links
+from Scrapper.Utils.httpUtil import get_page
 
 from .diagnostics import restart_deamon
 
@@ -507,6 +510,28 @@ async def batch_ui(request):
     print('list_ui.html')
     return web.FileResponse(os.path.join('..', 'default_ui', 'batch.html'))
 
+async def get_links(request):
+    """
+    ---
+    description: This end-point returns a list of urls (helper for get internal UI).
+    tags:
+    - DATA
+    responses:
+        "200":
+            description: successful operation. Return urls.
+        "405":
+            description: invalid HTTP Method
+    """
+    try:
+        async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ttl_dns_cache=500, ssl=False)) as session:
+            vtu_page = await get_page(session, 'https://results.vtu.ac.in')
+        if len(vtu_page) < 5000:
+            return web.json_response({'message':'COULDNT CONNECT TO VTU... Try again later'})
+        res = parse_for_links(vtu_page)
+        return web.json_response(res)
+    except Exception as e:
+        return web.json_response({'message':'COULDNT CONNECT TO VTU... Try again later'})
+    
 
 # initialisation helper
 def initialise_routes(app):
@@ -530,5 +555,6 @@ def initialise_routes(app):
             get('/data/exam/{exam_id}/file/{file_name}', send_file, allow_head=False),
             get('/data/exam/{exam_id}/usn', usn_get, allow_head=False),
             get('/data/exam/{exam_id}/usn/{usn}', usn_instance_get, allow_head=False),
+            get('/data/vtu_links', get_links, allow_head=False),
         ]
     )

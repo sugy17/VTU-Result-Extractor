@@ -4,6 +4,8 @@
 <head>
     <title>Scrapper</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
     <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"> -->
     <style>
 
@@ -247,9 +249,11 @@ body {
             </p>
             <br><br>     
             USNs :<input type="text" name="usns" id="usns" placeholder="Enter comma seperated usns for eg-  1cr16cs027,1cr17cs154-1cr17cs157" style="width: 50%;">
-            <br>
-            URL :<input type="text" id="url" placeholder="url of index page for eg- https://results.vtu.ac.in/AS_CBCS/index.php" style="width: 50%;"/>
-            reval:<input type="checkbox" name="reval" id="reval"/>
+            <br><br>
+            <label for="urls">Choose the correct link:</label>
+            <select name="urls" id="url">
+            </select>
+            <!--reval:--><input type="checkbox" style="display:none" name="reval" id="reval"/>
 
             <button onclick="start()" id="send" >SEND</button>
             <div class="loader" style="visibility:hidden" id="load"></div><br>
@@ -264,6 +268,7 @@ body {
         var timer;
         stats();
         timer = setInterval(stats, 10000);
+        document.onload = populateUrls(api + 'data/vtu_links', populateUrlsHandler, "url");
         function start() {
             url = document.getElementById('url').value;
             inp = document.getElementById('usns').value;
@@ -329,21 +334,53 @@ body {
             xhttp.send();
         }
         function apiInfoHandler () {
-            document.getElementById("content").innerHTML = "<iframe id=\"Iframe\"src=\""+api+"info"+"\" width=\"100%\" ></iframe>";
-            iFrameID = document.getElementById("Iframe");
+            document.getElementById("content").innerHTML = "<iframe id=\"Iframe\"src=\""+api+"info"+"\" height=\"500px\" width=\"100%\" ></iframe>";
+            /*iFrameID = document.getElementById("Iframe");
             iFrameID.addEventListener("load", function() {
                 this.height = "";
                 this.height = this.contentWindow.document.body.scrollHeight + "px";
-            }); 
+            });*/
         }
         function dataFilesHandler () {
-            document.getElementById("content").innerHTML = "<iframe id=\"Iframe\"src=\""+api+"DATA"+"\" width=\"100%\" ></iframe>";
-            iFrameID = document.getElementById("Iframe");
+            document.getElementById("content").innerHTML = "<iframe id=\"Iframe\"src=\""+api+"DATA"+"\" height=\"500px\" width=\"100%\" ></iframe>";
+            /*iFrameID = document.getElementById("Iframe");
             iFrameID.addEventListener("load", function() {
                 this.height = "";
                 this.height = this.contentWindow.document.body.scrollHeight + "px";
-            }); 
+            });*/ 
         }
+        function populateUrls (url, callback, id) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onerror = function (){
+                document.getElementById("url").innerHTML = 'Server error';
+            };
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    callback(this.responseText);
+                } else if (this.status == 404) {
+                    document.getElementById(id).innerHTML = "Unable to connect to server!!";
+                }
+            };
+            xhttp.open("GET", url, true);
+            xhttp.send();
+        }
+        function populateUrlsHandler (res) {
+            js = JSON.parse(res);
+            try{
+                document.getElementById("url").innerHTML = '<option value="null">'+js['message']+'</option>';
+                document.getElementById("url").disabled = true;
+                return;
+            }catch(e){}
+            tmp = "";
+            for(exam_type in js){
+                tmp += '<optgroup label="'+exam_type+'">';
+                for(i in js[exam_type])
+                    tmp += '<option value="'+js[exam_type][i]['link']+'">'+js[exam_type][i]['desc'].replace(/Click here for /i,"")+'</option>';
+                tmp += '</optgroup>';
+            }
+            document.getElementById("url").innerHTML = tmp;
+        }
+        
     </script>
 </body>
 
