@@ -271,12 +271,25 @@ body {
         document.onload = populateUrls(api + 'data/vtu_links', populateUrlsHandler, "url");
         function start() {
             url = document.getElementById('url').value;
-            inp = document.getElementById('usns').value;
+            inp = document.getElementById('usns').value.trim().replace(/[\n\r\t]/g,' ').replace(/\s+/g,',');
+            if(!isValid(inp,url)){
+                alert("Please enter the required details correctly as specified!");
+                return;
+            }
             reval = document.getElementById("reval").checked;
             sendJson(api + 'input/list?url='+url+'&reval='+reval, {"usns" : inp}, display, 'status');
         }
         function stats() {
             getStats(api+'queue', display, 'status');
+        }
+        function isValid(inp,url){
+            if(inp.match(/([^a-z0-9\-,])/i))
+                return false;
+            usns = inp.split(',');
+            for(i in usns)
+                if(!(usns[i].match(/\d[a-z]{2}\d\d([a-z]{2}|[a-z]{3})\d\d\d/)||usns[i].match(/\d[a-z]{2}\d\d([a-z]{2}|[a-z]{3})\d\d\d-\d[a-z]{2}\d\d([a-z]{2}|[a-z]{3})\d\d\d/)))
+                    return false;
+            return url!="";
         }
         function display(res) {
             try {
@@ -366,16 +379,16 @@ body {
         }
         function populateUrlsHandler (res) {
             js = JSON.parse(res);
-            try{
-                document.getElementById("url").innerHTML = '<option value="null">'+js['message']+'</option>';
+            if(js['message']){
+                document.getElementById("url").innerHTML = '<option value="">'+js['message']+'</option>';
                 document.getElementById("url").disabled = true;
                 return;
-            }catch(e){}
+            }
             tmp = "";
             for(exam_type in js){
                 tmp += '<optgroup label="'+exam_type+'">';
                 for(i in js[exam_type])
-                    tmp += '<option value="'+js[exam_type][i]['link']+'">'+js[exam_type][i]['desc'].replace(/Click here for /i,"")+'</option>';
+                    tmp += '<option value="'+js[exam_type][i]['link']+'">'+js[exam_type][i]['desc'].replace(/Click here for /i,exam_type+' ')+'</option>';
                 tmp += '</optgroup>';
             }
             document.getElementById("url").innerHTML = tmp;

@@ -523,14 +523,14 @@ async def get_links(request):
             description: invalid HTTP Method
     """
     try:
-        async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ttl_dns_cache=500, ssl=False)) as session:
+        async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
             vtu_page = await get_page(session, 'https://results.vtu.ac.in')
         if len(vtu_page) < 5000:
-            return web.json_response({'message':'COULDNT CONNECT TO VTU... Try again later'})
+            return web.json_response({'message':'COULDNT CONNECT TO VTU. Try again later'})
         res = parse_for_links(vtu_page)
         return web.json_response(res)
     except Exception as e:
-        return web.json_response({'message':'COULDNT CONNECT TO VTU... Try again later'})
+        return web.json_response({'message':'COULDNT CONNECT TO VTU. Try again later'})
     
 
 # initialisation helper
