@@ -15,7 +15,7 @@ from .Utils.httpUtil import get_page, post_page
 
 
 async def get_exam_name(indexpage_url):
-    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ttl_dns_cache=500, ssl=False)) as session:
+    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
         index_page = await get_page(session, host + indexpage_url)
     # print(host + indexpage_url)
     if len(index_page) < 5000:
@@ -24,7 +24,7 @@ async def get_exam_name(indexpage_url):
 
 
 # async def sync_subject_details():
-#     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ttl_dns_cache=500, ssl=False)) as session:
+#     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
 #         try:
 #             syllbuspage = await get_page(session, "https://vtu.ac.in/b-e-scheme-syllabus/")
 #             # pdf_urls = parse_syllabuspage(syllbuspage)
@@ -47,7 +47,7 @@ async def get_resultpage(usn, indexpage_url, resultpage_url, save=True):
     # cookie = {'PHPSESSID': 'q6k5bedrobcjob6opttgg11i14'+str(ccount)}
     while True:
         try:
-            async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ttl_dns_cache=500, ssl=False)) as session:
+            async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
                 index_page, img_src, token, captcha_blob, captcha_code = "", "", "", "", ""
                 try:
                     index_page = await get_page(session, host + indexpage_url)
