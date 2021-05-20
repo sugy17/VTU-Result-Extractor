@@ -259,10 +259,9 @@ body {
         document.onload = populateUrls(api + 'data/vtu_links', populateUrlsHandler, "url");
         function getrange() {
             clear();
-            usn = document.getElementById("usn").value.trim().replace(/[\n\r\t]/g,' ').replace(/\s+/g,',');
+            usn = document.getElementById("usn").value.trim().replace(/[\n\r\t]/g,' ').replace(/\s+/g,',').toLowerCase();
             url = document.getElementById("url").value;
-            inp = document.getElementById('usns');
-            if(!isValid(inp,url)){
+            if(!isValid(usn,url)){
                 alert("Please enter the required details correctly as specified!");
                 return;
             }
@@ -272,10 +271,8 @@ body {
         function isValid(inp,url){
             if(inp.match(/([^a-z0-9\-,])/i))
                 return false;
-            usns = inp.split(',');
-            for(i in usns)
-                if(!(usns[i].match(/\d[a-z]{2}\d\d([a-z]{2}|[a-z]{3})\d\d\d/)||usns[i].match(/\d[a-z]{2}\d\d([a-z]{2}|[a-z]{3})\d\d\d-\d[a-z]{2}\d\d([a-z]{2}|[a-z]{3})\d\d\d/)))
-                    return false;
+            if(!(usn.match(/\d[a-z]{2}\d\d([a-z]{2}|[a-z]{3})\d\d\d/)))
+                return false;
             return url!="";
         }
         function getRes(usn, url, reval) {

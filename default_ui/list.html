@@ -262,6 +262,10 @@ body {
         Queue:<div id="queue"></div>
             <b>Status:</b>
             <p id="status"></p>
+        <br><br><br><br>
+
+        History:<div id="history"></div>
+
     </center>
     <script type="text/javascript">
         var api = "/";
@@ -271,7 +275,7 @@ body {
         document.onload = populateUrls(api + 'data/vtu_links', populateUrlsHandler, "url");
         function start() {
             url = document.getElementById('url').value;
-            inp = document.getElementById('usns').value.trim().replace(/[\n\r\t]/g,' ').replace(/\s+/g,',');
+            inp = document.getElementById('usns').value.trim().replace(/[\n\r\t]/g,' ').replace(/\s+/g,',').toLowerCase();
             if(!isValid(inp,url)){
                 alert("Please enter the required details correctly as specified!");
                 return;
