@@ -1,5 +1,7 @@
 # VTU Result Extractor
-The API is live at https://scrapper-web.rxav.pw/
+Live at https://scrapper-web.rxav.pw/
+
+Swagger-url: https://scrapper-web.rxav.pw/info
 
 Backend for VTU Result Analysis project.
 
@@ -28,8 +30,8 @@ Their Internal Workings are Subject to Change and the Output to Each May Also ch
   - GET /data/exam/{exam_id}/file/{file_name}
   - GET /data/exam/{exam_id}/usn
   - GET /data/exam/{exam_id}/usn/{usn}
-  
-Please take a look at the documentation for the same for detailed Information on how these routes work.
+
+Refer to the swagger-url for more information.
 
 ## docker-compose
 Pass port number through scrapper_port,defaults to port 8000.

@@ -36,11 +36,11 @@ app['event_loop'] = my_loop
 
 # setup swagger docs at '/info'
 setup_swagger(app, swagger_url='/info',
-              description='''Takes in url and list of USNS, scrapes for results from VTU's
-                site and sweeps them into semstat-database for analysis.All routes are functional.
-                Main route /input/list can be used for prototyping.Remaining
-                routes are to fulfill non functional requirements and increase QOL''',
-              title="Scrapper API",
+              description='''Welcome to one of the backend applications for Result Analysis Project.This application takes in url and list of USNS,
+                scrapes for results from VTU's site and sweeps them into semstat-database for analysis.The main route to be used for this is /input/list.
+                Remaining routes are to fulfill non functional requirements and increase QOL.This app can function indepently of the semstat-database 
+                and the react based UI.The primitive UI is setup <a href="https://scrapper-web.rxav.pw/ui/list">here</a>''',
+              title="VTU Result Extractor API",
               api_version="1.0.0",
               contact="sugy17cs@cmrit.ac.in")
 

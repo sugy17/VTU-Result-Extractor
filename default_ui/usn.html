@@ -2,7 +2,8 @@
 <html>
 
 <head>
-    <title>Scrapper</title>
+    <script>0</script>
+    <title>VTU Result Extractor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
     <meta content="utf-8" http-equiv="encoding">
@@ -227,7 +228,7 @@ body {
 
 </head>
 <div class="header">
-    <h1>Scrapper</h1>
+    <h1>VTU Result Extractor</h1>
 </div>
 <div class="topnav">
     <a  onclick="location.href=api+'ui/list'" onmouseover="" style="cursor: pointer;">HOME</a>
@@ -236,6 +237,7 @@ body {
     <a  onclick="apiInfoHandler()" onmouseover="" style="cursor: pointer;">API INFO</a>
 </div>
 <body>
+    <script>0</script>
     <center class="card" id="content">
         <h3>CHECK INTEGRITY</h3>
         <p>
@@ -256,6 +258,22 @@ body {
     </center>
     <script>
         var api = "/";
+        function apiInfoHandler () {
+            document.getElementById("content").innerHTML = "<iframe id=\"Iframe\"src=\""+api+"info"+"\" height=\"500px\" width=\"100%\" ></iframe>";
+            /*iFrameID = document.getElementById("Iframe");
+            iFrameID.addEventListener("load", function() {
+                this.height = "";
+                this.height = this.contentWindow.document.body.scrollHeight + "px";
+            });*/
+        }
+        function dataFilesHandler () {
+            document.getElementById("content").innerHTML = "<iframe id=\"Iframe\"src=\""+api+"DATA"+"\" height=\"500px\" width=\"100%\" ></iframe>";
+            /*iFrameID = document.getElementById("Iframe");
+            iFrameID.addEventListener("load", function() {
+                this.height = "";
+                this.height = this.contentWindow.document.body.scrollHeight + "px";
+            });*/ 
+        }
         document.onload = populateUrls(api + 'data/vtu_links', populateUrlsHandler, "url");
         function getrange() {
             clear();
@@ -426,7 +444,10 @@ body {
                     tmp += '<option value="'+js[exam_type][i]['link']+'">'+js[exam_type][i]['desc'].replace(/Click here for /i,exam_type+' ')+'</option>';
                 tmp += '</optgroup>';
             }
-            document.getElementById("url").innerHTML = tmp;
+            try{
+                document.getElementById("url").innerHTML = tmp;
+            }
+            catch(e){}
         }
         
     </script>

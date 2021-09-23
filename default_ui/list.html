@@ -2,7 +2,8 @@
 <html>
 
 <head>
-    <title>Scrapper</title>
+    <script>0</script>
+    <title>VTU Result Extractor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
     <meta content="utf-8" http-equiv="encoding">
@@ -227,7 +228,7 @@ body {
 
 </head>
 <div class="header">
-    <h1>Scrapper</h1>
+    <h1>VTU Result Extractor</h1>
 </div>
 <div class="topnav">
     <a  onclick="location.href=api+'ui/list'" onmouseover="" style="cursor: pointer;">HOME</a>
@@ -237,10 +238,14 @@ body {
 </div>
 <br>
 <p>
-    NOTICE : First visit the CHECK INTIGRITY page if scrapping for a new examination.
+    NOTE : First visit the CHECK INTIGRITY page if scrapping for a new examination.<br><br>
+    Welcome to one of the backend applications for Result Analysis Project.This is just a primitive UI.This application takes in the <br>
+    url and list of USNS,scrapes for results from VTU's site and sweeps them into semstat-database for analysis, also stores the data <br>
+    files in the 'DATA FILES' section.<br>
 </p>
 <br>
 <body>
+    <script>0</script>
      <center class="card" id="content">
             <h3>INPUT</h3>
 
@@ -264,7 +269,7 @@ body {
             <p id="status"></p>
         <br><br><br><br>
 
-        History:<div id="history"></div>
+        <!-- History:<div id="history"></div> -->
 
     </center>
     <script type="text/javascript">
@@ -395,7 +400,10 @@ body {
                     tmp += '<option value="'+js[exam_type][i]['link']+'">'+js[exam_type][i]['desc'].replace(/Click here for /i,exam_type+' ')+'</option>';
                 tmp += '</optgroup>';
             }
-            document.getElementById("url").innerHTML = tmp;
+            try{
+                document.getElementById("url").innerHTML = tmp;
+            }
+            catch(e){}
         }
         
     </script>

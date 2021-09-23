@@ -1,9 +1,13 @@
 import asyncio
+import ssl
 
+headers = {}
 
-async def get_page(session, url, get_blob=False, chunksize = None):
+ssl=ssl.create_default_context(purpose=ssl.Purpose.CLIENT_AUTH)
+
+async def get_page(session, url, get_blob=False, chunksize=None):
     await asyncio.sleep(0.2)
-    async with session.get(url) as resp:
+    async with session.get(url, headers=headers,ssl=ssl) as resp:
         # print(resp.status)
         resp.raise_for_status()
         if chunksize:
@@ -13,6 +17,6 @@ async def get_page(session, url, get_blob=False, chunksize = None):
 
 async def post_page(session, url, data):
     await asyncio.sleep(0.2)
-    async with session.post(url, data=data) as resp:
+    async with session.post(url, data=data, headers=headers, ssl=ssl) as resp:
         resp.raise_for_status()
         return await resp.text()

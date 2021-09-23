@@ -466,7 +466,7 @@ async def favicon(request):
 async def usn_ui(request):
     """
     ---
-    description: This end-point takes in a single USN along with source URL (helper for get internal UI).
+    description: This end-point returns a page which takes in a single USN along with source URL (part of internal UI).
     tags:
     - DEFAULT UI
     responses:
@@ -482,7 +482,7 @@ async def usn_ui(request):
 async def list_ui(request):
     """
     ---
-    description: This end-point takes in a single USN along with source URL (helper for get internal UI).
+    description: This end-point returns a page which takes in a list of USNs along with source URL (part of internal UI).
     tags:
     - DEFAULT UI
     responses:
@@ -491,24 +491,13 @@ async def list_ui(request):
         "405":
             description: invalid HTTP Method
     """
-    print('scrapper.html')
+    print('list.html')
     return web.FileResponse(os.path.join('..', 'default_ui', 'list.html'))
 
-
-async def batch_ui(request):
-    """
-    ---
-    description: This end-point takes list of USNs along with source URL (helper for get internal UI).
-    tags:
-    - DEFAULT UI
-    responses:
-        "200":
-            description: successful operation. Returns a static page.
-        "405":
-            description: invalid HTTP Method
-    """
-    print('list_ui.html')
-    return web.FileResponse(os.path.join('..', 'default_ui', 'batch.html'))
+async def root(request):
+    # Same as list_ui, written this way to not appear in swagger info
+    print('list.html')
+    return web.FileResponse(os.path.join('..', 'default_ui', 'list.html'))
 
 async def get_links(request):
     """
@@ -523,11 +512,11 @@ async def get_links(request):
             description: invalid HTTP Method
     """
     try:
-        async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
+        async with aiohttp.ClientSession() as session:
             vtu_page = await get_page(session, 'https://results.vtu.ac.in')
         if len(vtu_page) < 5000:
             return web.json_response({'message':'COULDNT CONNECT TO VTU. Try again later'})
-        res = parse_for_links(vtu_page)
+        res = await parse_for_links('https://results.vtu.ac.in',vtu_page, "hello")
         return web.json_response(res)
     except Exception as e:
         return web.json_response({'message':'COULDNT CONNECT TO VTU. Try again later'})
@@ -542,7 +531,7 @@ def initialise_routes(app):
             get('/ui/test', usn_ui, allow_head=False),
             get('/input/usn', single_usn, allow_head=False),
             get('/ui/list', list_ui, allow_head=False),
-            get('/', list_ui, allow_head=False),
+            get('/', root, allow_head=False),
             post('/input/list', list_inp),
             get('/queue', queue_get, allow_head=False),
             delete('/queue/{request_id}', queue_cancel),
